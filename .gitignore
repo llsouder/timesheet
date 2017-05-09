@@ -11,3 +11,5 @@ profiles.clj
 .nrepl-port
 /log
 *.swp
+node_modules/
+figwheel_server.log
