@@ -4,6 +4,19 @@
 
 (enable-console-print!)
 
-(devtools/install!)
+(defn reload []
+  (core/init!)
+  ((.. js/ng -platform -browser -bootstrap)
+   (.-AppComponent (.-app js/window))))
+
+;;(devtools/install!)
+
+(figwheel/watch-and-reload :websocket-url "ws://localhost:3449/figwheel-ws"
+                           :on-jsload reload)
 
 (core/init!)
+(defonce only-attach-listener-once
+  (.addEventListener js/document "DOMContentLoaded"
+                     (fn []
+                       ((.. js/ng -platform -browser -bootstrap)
+                        (.-AppComponent (core/get-app))))))
