@@ -1,6 +1,5 @@
 (ns user
   (:require [mount.core :as mount]
-            [timesheet.figwheel :refer [start-fw stop-fw cljs]]
             timesheet.core))
 
 (defn start []
