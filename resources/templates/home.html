@@ -1,8 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-  <div class="col-sm-12">
-    {{docs|markdown}}
+  <div class="span12">
+    <ul class="messages">
+      {% for item in employees %}
+      <li>
+        <p>employee number {{item.employee_number}}</p>
+        <p>first name {{item.first_name}}</p>
+        <p>last name {{item.last_name}}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <form method="POST" action="/">
+      {% csrf-field %}
+      <p>
+      Employee Number:
+      <input class="form-control"
+             type="text"
+             name="employee_number"
+             value="{{employee_number}}" />
+      </p>
+      {% if errors.employee_number %}
+      <div class="alert alert-danger">{{errors.employee_number|join}}</div>
+      {% endif %}
+      <p>
+      First Name:
+      <input class="form-control"
+                rows="4"
+                cols="50"
+                name="first_name"
+                value="{{first_name}}"/>
+      </p>
+      {% if errors.first_name %}
+      <div class="alert alert-danger">{{errors.first_name|join}}</div>
+      {% endif %}
+      <p>
+      Last Name:
+      <input class="form-control"
+                rows="4"
+                cols="50"
+                name="last_name"
+                value="{{last_name}}"/>
+      </p>
+      {% if errors.last_name %}
+      <div class="alert alert-danger">{{errors.last_name|join}}</div>
+      {% endif %}
+      <p>
+      DOB:
+      <input class="form-control"
+                rows="4"
+                cols="10"
+                name="dob"
+                value="{{dob}}"/>
+      </p>
+      {% if errors.dob %}
+      <div class="alert alert-danger">{{errors.dob|join}}</div>
+      {% endif %}
+      <input type="submit" class="btn btn-primary" value="save" />
+    </form>
   </div>
 </div>
 {% endblock %}

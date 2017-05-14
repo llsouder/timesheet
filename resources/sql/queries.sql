@@ -1,21 +1,25 @@
--- :name create-user! :! :n
--- :doc creates a new user record
-INSERT INTO users
-(id, first_name, last_name, email, pass)
-VALUES (:id, :first_name, :last_name, :email, :pass)
+-- :name create-employee! :! :n
+-- :doc creates a new employee record
+INSERT INTO employee
+(employee_number, first_name, last_name, dob )
+VALUES (:employee_number, :first_name, :last_name, :dob)
 
--- :name update-user! :! :n
+-- :name update-employee! :! :n
 -- :doc update an existing user record
-UPDATE users
-SET first_name = :first_name, last_name = :last_name, email = :email
-WHERE id = :id
+UPDATE employee
+SET employee_number = :employee_number, first_name = :first_name, last_name = :last_name, dob = :dob
+WHERE employee_number = :employee_number
 
--- :name get-user :? :1
+-- :name get-employee :? :1
 -- :doc retrieve a user given the id.
-SELECT * FROM users
-WHERE id = :id
+SELECT * FROM employee
+WHERE employee_number = :employee_number
+
+-- :name get-all-employees :? :*
+-- :doc retrieve all the employees.
+SELECT * FROM employee
 
 -- :name delete-user! :! :n
 -- :doc delete a user given the id
-DELETE FROM users
-WHERE id = :id
+DELETE FROM employee
+WHERE employee_number = :employee_number
