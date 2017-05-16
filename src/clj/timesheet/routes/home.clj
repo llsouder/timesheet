@@ -9,6 +9,7 @@
             [struct.core :as st]))
 
 (defn is-not-used 
+  "Returns true if the employee number in not already a key in the employee table."
   [employee_number]
   (< (:rows (into {} (db/check-employee-number {:employee_number employee_number}))) 1 ))
 
