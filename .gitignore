@@ -11,5 +11,5 @@ profiles.clj
 .nrepl-port
 /log
 *.swp
-timesheet_dev.db.mv.db
-timesheet_dev.db.trace.db
+timesheet_*.db.mv.db
+timesheet_*.db.trace.db
