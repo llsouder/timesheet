@@ -2,66 +2,70 @@
 {% block content %}
 <div class="row">
   <div class="span12">
-    <ul class="messages">
-      {% for item in employees %}
-      <li>
-        <p>employee number {{item.employee_number}}</p>
-        <p>first name {{item.first_name}}</p>
-        <p>last name {{item.last_name}}</p>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-<div class="row">
-  <div class="span12">
-    <form method="POST" action="/">
-      {% csrf-field %}
-      <p>
-      Employee Number:
-      <input class="form-control"
-             type="text"
-             name="employee_number"
-             value="{{employee_number}}" />
-      </p>
-      {% if errors.employee_number %}
-      <div class="alert alert-danger">{{errors.employee_number|join}}</div>
-      {% endif %}
-      <p>
-      First Name:
-      <input class="form-control"
-                rows="4"
-                cols="50"
-                name="first_name"
-                value="{{first_name}}"/>
-      </p>
-      {% if errors.first_name %}
-      <div class="alert alert-danger">{{errors.first_name|join}}</div>
-      {% endif %}
-      <p>
-      Last Name:
-      <input class="form-control"
-                rows="4"
-                cols="50"
-                name="last_name"
-                value="{{last_name}}"/>
-      </p>
-      {% if errors.last_name %}
-      <div class="alert alert-danger">{{errors.last_name|join}}</div>
-      {% endif %}
-      <p>
-      DOB:
-      <input class="form-control"
-                rows="4"
-                cols="10"
-                name="dob"
-                value="{{dob}}"/>
-      </p>
-      {% if errors.dob %}
-      <div class="alert alert-danger">{{errors.dob|join}}</div>
-      {% endif %}
-      <input type="submit" class="btn btn-primary" value="save" />
-    </form>
+    <table class="employees table table-bordered table-striped table-highlight">
+      <thead>
+        <th>Employee Number</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>DOB</th>
+      </thead>
+      <tbody>
+        {% for item in employees %}
+        <tr>
+          <td>{{item.employee_number}}</td>
+          <td>{{item.first_name}}</td>
+          <td>{{item.last_name}}</td>
+          <td>{{item.dob}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <form method="POST" action="/">
+            {% csrf-field %}
+            <td>
+              Employee Number:
+              <input class="form-control"
+                     type="text"
+                     name="employee_number"
+                     value="{{employee_number}}" />
+            </td>
+            {% if errors.employee_number %}
+            <div class="alert alert-danger">{{errors.employee_number|join}}</div>
+            {% endif %}
+            <td>
+              First Name:
+              <input class="form-control"
+                     name="first_name"
+                     value="{{first_name}}"/>
+            </td>
+            {% if errors.first_name %}
+            <div class="alert alert-danger">{{errors.first_name|join}}</div>
+            {% endif %}
+            <td>
+              Last Name:
+              <input class="form-control"
+                     name="last_name"
+                     value="{{last_name}}"/>
+            </td>
+            {% if errors.last_name %}
+            <div class="alert alert-danger">{{errors.last_name|join}}</div>
+            {% endif %}
+            <td>
+              DOB:
+              <input class="form-control"
+                     name="dob"
+                     value="{{dob}}"/>
+              {% if errors.dob %}
+              <div class="alert alert-danger">{{errors.dob|join}}</div>
+              {% endif %}
+            </td>
+            <tr>
+              <td>
+                <input type="submit" class="btn btn-primary" value="save" />
+              </td>
+            </tr>
+          </form>
+        </tr>
+      </tbody>
   </div>
 </div>
 {% endblock %}

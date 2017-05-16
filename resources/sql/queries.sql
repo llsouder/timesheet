@@ -4,6 +4,11 @@ INSERT INTO employee
 (employee_number, first_name, last_name, dob )
 VALUES (:employee_number, :first_name, :last_name, :dob)
 
+-- :name check-employee-number :? :*
+-- :doc check if employee number already exist
+SELECT COUNT(*) as rows FROM employee
+WHERE employee_number = :employee_number
+
 -- :name update-employee! :! :n
 -- :doc update an existing user record
 UPDATE employee

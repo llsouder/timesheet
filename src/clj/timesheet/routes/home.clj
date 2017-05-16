@@ -8,10 +8,16 @@
             [ring.util.response :refer [redirect]]
             [struct.core :as st]))
 
+(defn is-not-used 
+  [employee_number]
+  (< (:rows (into {} (db/check-employee-number {:employee_number employee_number}))) 1 ))
+
 (def employee-schema
   [[:employee_number
     st/required
-    st/string]
+    st/string
+    {:message "Employee number is already in use."
+     :validate #(is-not-used %)}]
   ;;[:email
   ;;st/required
   ;;st/email]
@@ -53,7 +59,6 @@
       (response/found "/"))))
 
 (defn home-page [{:keys [flash]}]
-  (log/info (db/get-all-employees))
   (layout/render
    "home.html"
    (merge {:employees (db/get-all-employees)}
