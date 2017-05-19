@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [routes wrap-routes]]
             [timesheet.layout :refer [error-page]]
             [timesheet.routes.home :refer [home-routes]]
+            [timesheet.routes.admin :refer [admin-routes]]
             [compojure.route :as route]
             [timesheet.env :refer [defaults]]
             [mount.core :as mount]
@@ -14,6 +15,9 @@
 (def app-routes
   (routes
     (-> #'home-routes
+        (wrap-routes middleware/wrap-csrf)
+        (wrap-routes middleware/wrap-formats))
+    (-> #'admin-routes
         (wrap-routes middleware/wrap-csrf)
         (wrap-routes middleware/wrap-formats))
     (route/not-found

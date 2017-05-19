@@ -8,68 +8,13 @@
             [ring.util.response :refer [redirect]]
             [struct.core :as st]))
 
-(defn is-not-used 
-  "Returns true if the employee number in not already a key in the employee table."
-  [employee_number]
-  (< (:rows (into {} (db/check-employee-number {:employee_number employee_number}))) 1 ))
-
-(def employee-schema
-  [[:employee_number
-    st/required
-    st/string
-    {:message "Employee number is already in use."
-     :validate #(is-not-used %)}]
-  ;;[:email
-  ;;st/required
-  ;;st/email]
-  [:first_name
-    st/required
-    st/string]
-  [:last_name
-    st/required
-    st/string]
-  [:dob
-    st/required
-    st/string
-   {:message "DOB must be in the format yyyy/mm/dd"
-     :validate #(> (count %) 9)}]
-  ;;[:street
-  ;;  st/required
-  ;;  st/string]
-  ;;[:city
-  ;;  st/required
-  ;;  st/string]
-  ;;[:state
-  ;;  st/required
-  ;;  st/string]
-  ;;[:zip
-  ;;  st/required
-  ;;  st/string]])
-   ])
-
-(defn validate-employee [params]
-  (first (st/validate params employee-schema)))
-
-(defn create-employee! [{:keys [params]}]
-  (if-let [errors (validate-employee params)]
-    (-> (response/found "/")
-        (assoc :flash (assoc params :errors errors)))
-    (do
-      (db/create-employee!
-       (assoc params :last_login (java.util.Date.)))
-      (response/found "/"))))
-
-(defn home-page [{:keys [flash]}]
-  (layout/render
-   "home.html"
-   (merge {:employees (db/get-all-employees)}
-          (select-keys flash [:employee_number :first_name :last_name :dob :errors]))))
+(defn home-page []
+  (layout/render "home.html"))
 
 (defn about-page []
   (layout/render "about.html"))
 
 (defroutes home-routes
-  (GET "/" request (home-page request))
-  (POST "/" request (create-employee! request))
+  (GET "/" [] (home-page))
   (GET "/about" [] (about-page)))
 
