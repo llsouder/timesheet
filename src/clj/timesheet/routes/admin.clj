@@ -65,11 +65,7 @@
    (merge {:employees (db/get-all-employees)}
           (select-keys flash [:employee_number :first_name :last_name :dob :errors]))))
 
-(defn about-page []
-  (layout/render "about.html"))
-
 (defroutes admin-routes
   (GET "/admin" request (admin-page request))
-  (POST "/admin" request (create-employee! request))
-  (GET "/about" [] (about-page)))
+  (POST "/admin" request (create-employee! request)))
 
