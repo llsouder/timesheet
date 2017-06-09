@@ -31,7 +31,8 @@
                  [selmer "1.10.7"]]
 
   :min-lein-version "2.0.0"
-
+  
+  :test-matcher #"timesheet*\.test\..*"
   :jvm-opts ["-server" "-Dconf=.lein-env"]
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
@@ -42,6 +43,7 @@
 
   :plugins [[lein-cprop "1.0.1"]
             [migratus-lein "0.4.7"]
+            [quickie "0.4.1"]
             [lein-immutant "2.1.0"]]
 
   :profiles
