@@ -10,10 +10,15 @@
             [clj-time.core :as t]))
 
 (defn first-day-of-week [date]
-  "return the first day of the week"
+  "Return the first day of the week."
   (if (= 7 (.get (.dayOfWeek date)))
     date
     (.withDayOfWeek (.minusWeeks date 1) 7)))
+
+(defn work-week [date]
+  "Return seven days of the week starting on Sunday."
+  (let [firstday (first-day-of-week date)]
+    (map #(t/plus firstday (t/days %)) (range 0 7))))
 
 ;;(defroutes timesheet-routes
 ;;  (GET "/timesheet" request (admin-page request)))
