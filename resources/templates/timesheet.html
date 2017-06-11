@@ -4,12 +4,16 @@
   <div class="span12">
     <table class="timesheet fixed table table-bordered table-striped table-highlight">
       <thead>
+        <th style="width: 180px;text-align: center;">Name</th>
         {% for day in days %}
-        <th style="width: 130px;text-align: center;">{{day|safe}}</th>
+        <th style="width: 80px;text-align: center;">{{day|safe}}</th>
         {% endfor %}
+        <th style="width: 100px;text-align: center;">Total</th>
       </thead>
       <tbody>
         <tr>
+          <td> </td>
+          <td> </td>
           <td> </td>
           <td> </td>
           <td> </td>
