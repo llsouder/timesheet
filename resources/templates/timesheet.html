@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="span12">
+    <table class="timesheet fixed table table-bordered table-striped table-highlight">
+      <thead>
+        {% for day in days %}
+        <th style="width: 130px;text-align: center;">{{day|safe}}</th>
+        {% endfor %}
+      </thead>
+      <tbody>
+        <tr>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+        </tr>
+        <tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
