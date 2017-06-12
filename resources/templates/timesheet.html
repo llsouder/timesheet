@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<div style="text-align:right">
+    <form method="POST" action="/timesheet">
+      {% csrf-field %}
+      Period End Date:
+      <input type="text"
+             name="employee_number"
+             value="{{enddate}}" />
+      <input type="submit" class="btn btn-primary" value="<-" />
+      <input type="submit" class="btn btn-primary" value="->" />
+    </form>
+</div>
+
 <div class="row">
   <div class="span12">
     <table class="timesheet fixed table table-bordered table-striped table-highlight">
