@@ -30,7 +30,7 @@
     (t/plus (first-day-of-week date) (t/days 6)))
 
 (defn formatted-end-date [date]
-  (f/unparse MM-dd-yyyy-formatter (last-day-of-week (t/now))))
+  (f/unparse MM-dd-yyyy-formatter (last-day-of-week date)))
 
 (defn work-week [date]
   "Return seven days of the week starting on Sunday."
@@ -53,7 +53,6 @@
                  (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))
                   (if (some? (:backward params))
                     (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7)))))]
-    (log/info "date=" date)
   (timesheet-page-for date)))
    
 (defroutes timesheet-routes
