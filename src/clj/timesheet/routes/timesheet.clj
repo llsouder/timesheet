@@ -41,13 +41,22 @@
   "Return seven days starting on Sunday. Format is name, <br>,  MM-dd."
   (map #(str (day-name %) "<br>" (f/unparse MM-dd-formatter %)) (work-week date)))
 
-(defn timesheet-page [{:keys [flash]}]
-  (let [date (t/now)]
+(defn timesheet-page-for [date]
   (layout/render
    "timesheet.html"
-   {:enddate (formatted-end-date date) :days (formatted-work-week date) })))
-   
+   {:enddate (formatted-end-date date) :days (formatted-work-week date) }))
 
+(defn timesheet-page [{:keys [params]}]
+  (let [date (if (nil? (:enddate params))
+               (t/now) 
+               (if (some? (:forward params))
+                 (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))
+                  (if (some? (:backward params))
+                    (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7)))))]
+    (log/info "date=" date)
+  (timesheet-page-for date)))
+   
 (defroutes timesheet-routes
+  (POST "/timesheet" request (timesheet-page request))
   (GET "/timesheet" request (timesheet-page request)))
 
