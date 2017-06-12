@@ -31,7 +31,7 @@
   [:dob
     st/required
     st/string
-   {:message "DOB must be in the format yyyy/mm/dd"
+   {:message "DOB must be in the format yyyy-mm-dd"
      :validate #(> (count %) 9)}]
   ;;[:street
   ;;  st/required
