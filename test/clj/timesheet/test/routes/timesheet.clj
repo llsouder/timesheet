@@ -29,7 +29,7 @@
     (let [thedate (t/date-time 2017 06 4)]
     (is (= "Sunday" (day-name thedate))))))
 
-(deftest test-day-name-thrusday
+(deftest test-day-name-thursday
   (testing "Testing 6/4/2016 is Thursday"
     (let [thedate (t/date-time 2015 06 4)]
     (is (= "Thursday" (day-name thedate))))))
