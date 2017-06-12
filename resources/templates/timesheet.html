@@ -5,10 +5,10 @@
       {% csrf-field %}
       Period End Date:
       <input type="text"
-             name="employee_number"
+             name="enddate"
              value="{{enddate}}" />
-      <input type="submit" class="btn btn-primary" value="<-" />
-      <input type="submit" class="btn btn-primary" value="->" />
+      <input type="submit" class="btn btn-primary" name="backward" value="<-" />
+      <input type="submit" class="btn btn-primary" name="forward" value="->" />
     </form>
 </div>
 
