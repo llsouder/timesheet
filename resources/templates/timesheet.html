@@ -1,14 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+form
+{
+  float:right;
+}
+</style>
 <div style="text-align:right">
-    <form method="POST" action="/timesheet">
+    <form method="POST" action="/timesheet_next">
+      {% csrf-field %}
+      <input type="text"
+             style="display:none"
+             name="enddate"
+             value="{{enddate}}" />
+      <input type="submit" class="btn btn-primary" name="forward" value="->" />
+    </form>
+    <form method="POST" action="/timesheet_back">
       {% csrf-field %}
       Period End Date:
       <input type="text"
              name="enddate"
+             style="displayenddate"
+             value="{{enddate}}" disabled/>
+      <input type="text"
+             style="display:none"
+             name="enddate"
              value="{{enddate}}" />
       <input type="submit" class="btn btn-primary" name="backward" value="<-" />
-      <input type="submit" class="btn btn-primary" name="forward" value="->" />
     </form>
 </div>
 

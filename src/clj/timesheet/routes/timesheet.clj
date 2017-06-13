@@ -47,15 +47,18 @@
    {:enddate (formatted-end-date date) :days (formatted-work-week date) }))
 
 (defn timesheet-page [{:keys [params]}]
-  (let [date (if (nil? (:enddate params))
-               (t/now) 
-               (if (some? (:forward params))
-                 (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))
-                  (if (some? (:backward params))
-                    (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7)))))]
-  (timesheet-page-for date)))
+  (timesheet-page-for (t/now)))
    
+(defn timesheet-page-next [{:keys [params]}]
+  (let [date (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
+    (timesheet-page-for date)))
+
+(defn timesheet-page-back [{:keys [params]}]
+  (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
+    (timesheet-page-for date)))
+
 (defroutes timesheet-routes
-  (POST "/timesheet" request (timesheet-page request))
+  (POST "/timesheet_next" request (timesheet-page-next request))
+  (POST "/timesheet_back" request (timesheet-page-back request))
   (GET "/timesheet" request (timesheet-page request)))
 
