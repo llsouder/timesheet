@@ -44,6 +44,14 @@ form
       </thead>
       <tbody>
         <tr>
+          <form>
+          <td>
+            <select>
+              {% for charge in charges %}
+              <option value="{{charge.id}}">{{charge.name}}</option>
+              {% endfor %}
+            </select>
+          </td>
           <td> </td>
           <td> </td>
           <td> </td>
@@ -52,7 +60,7 @@ form
           <td> </td>
           <td> </td>
           <td> </td>
-          <td> </td>
+          </form>
         </tr>
         <tr>
       </tbody>
