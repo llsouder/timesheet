@@ -1,10 +1,11 @@
 add table to resources/migrations up and down
+  lein migratus create add-<name>-table
 
 add insert, remove, select statements to resources/queries.sql
-Create   INSERT INTO xxxxxx
-Retrieve SELECT * FROM xxxxxx WHERE id=:id
-Update   UPDATE xxxxxx SET xxxx=:xxxx WHERE id=:id
-Delete   DELETE FROM xxxxxx WHERE id=:id
+Create  INSERT INTO xxxxxx
+Read    SELECT * FROM xxxxxx WHERE id=:id
+Update  UPDATE xxxxxx SET xxxx=:xxxx WHERE id=:id
+Delete  DELETE FROM xxxxxx WHERE id=:id
 
 
 add html template to resources template.
