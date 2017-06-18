@@ -1,0 +1,18 @@
+add table to resources/migrations up and down
+
+add insert, remove, select statements to resources/queries.sql
+Create   INSERT INTO xxxxxx
+Retrieve SELECT * FROM xxxxxx WHERE id=:id
+Update   UPDATE xxxxxx SET xxxx=:xxxx WHERE id=:id
+Delete   DELETE FROM xxxxxx WHERE id=:id
+
+
+add html template to resources template.
+
+create a src/clj/<project>/routes/xxxx.clj with:
+
+(def <table>-schema [[:fld1 xxxx] [:fld2 ]])
+
+add new routes to handler.  Note you cannot use the DELETE routes in html forms.
+
+

@@ -28,3 +28,31 @@ SELECT * FROM employee
 -- :doc delete a user given the id
 DELETE FROM employee
 WHERE employee_number = :employee_number
+
+
+-- :name create-charge! :! :n
+-- :doc Creates a new charge record
+INSERT INTO charge
+(name)
+VALUES (:name)
+
+-- :name get-charge :? :1
+-- :doc Retrieve a charge given the id.
+SELECT * FROM charge
+WHERE id = :id
+
+-- :name update-charge! :! :n
+-- :doc Update an existing charge record
+UPDATE charge
+SET name = :name
+WHERE id = :id
+
+-- :name delete-charge! :! :n
+-- :doc Delete a charge given the id
+DELETE FROM charge
+WHERE id = :id
+
+-- :name get-all-charges :? :*
+-- :doc retrieve all the charges.
+SELECT * FROM charge
+
