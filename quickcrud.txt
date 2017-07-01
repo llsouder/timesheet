@@ -1,3 +1,10 @@
+Quick CRUD in Luminus
+=====================
+
+Add Tables
+----------
+Using migratus to add and remove tables to the database.  Currently testing with H2 database.  Hopefully when I switch over to Postgres the process I am documenting here will not change.
+
 add table to resources/migrations up and down
   lein migratus create add-<name>-table
 
@@ -31,6 +38,8 @@ DROP TABLE group;
 DROP TABLE employee-group;
 ```
  
+Add Queries
+-----------
 
 add insert, remove, select statements to resources/queries.sql
 Create  INSERT INTO xxxxxx
