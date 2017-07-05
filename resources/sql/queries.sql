@@ -16,12 +16,12 @@ SET employee_number = :employee_number, first_name = :first_name, last_name = :l
 WHERE employee_number = :employee_number
 
 -- :name get-employee :? :1
--- :doc retrieve a user given the id.
+-- :doc Read a user given the id.
 SELECT * FROM employee
 WHERE employee_number = :employee_number
 
 -- :name get-all-employees :? :*
--- :doc retrieve all the employees.
+-- :doc Read all the employees.
 SELECT * FROM employee
 
 -- :name delete-user! :! :n
@@ -53,6 +53,30 @@ DELETE FROM charge
 WHERE id = :id
 
 -- :name get-all-charges :? :*
--- :doc retrieve all the charges.
+-- :doc Read all the charges.
 SELECT * FROM charge
 
+-- :name insert-hour! :! :n
+-- :doc Insert a single hour record returning affected row count
+insert into hours (employee_number, charge_id, day, hours)
+values (:employee_number, :charge_id, :day, :hours)
+
+-- :name create-hours :! :n
+-- :doc Insert multiple hour records with :tuple* parameter type
+insert into hours (employee_number, charge_id, day, hours)
+values :tuple*:hours
+
+-- :name update-hour! :! :n
+-- :doc Update an existing hour record
+UPDATE hours
+SET hours = :hours
+WHERE employee_number = :employee_number AND
+charge_id = :charge_id AND
+day = :day;
+
+-- :name delete-hour! :! :n
+-- :doc Delete an existing hour record
+DELETE FROM hours
+WHERE employee_number = :employee_number AND
+charge_id = :charge_id AND
+day = :day;
