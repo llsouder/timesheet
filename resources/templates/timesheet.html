@@ -52,14 +52,9 @@ form
               {% endfor %}
             </select>
           </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
-          <td style="width: 30px;text-align: center;"><input type="text" size="4"/> </td>
+        {% for day in dates %}
+        <td style="width: 30px;text-align: center;"><input type="text" name="{{day}}" size="4"/> </td>
+        {% endfor %}
           </form>
         </tr>
         <tr>

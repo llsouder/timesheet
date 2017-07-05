@@ -44,7 +44,10 @@
 (defn timesheet-page-for [date]
   (layout/render
    "timesheet.html"
-   {:enddate (formatted-end-date date) :days (formatted-work-week date) :charges (db/get-all-charges)}))
+   {:enddate (formatted-end-date date) 
+    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
+    :days (formatted-work-week date) 
+    :charges (db/get-all-charges)}))
 
 (defn timesheet-page [{:keys [params]}]
   (timesheet-page-for (t/now)))
