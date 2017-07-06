@@ -37,7 +37,7 @@
   (let [firstday (first-day-of-week date)]
     (map #(t/plus firstday (t/days %)) (range 0 7))))
 
-(defn formatted-work-week [date]
+(defn work-week-header [date]
   "Return seven days starting on Sunday. Format is name, <br>,  MM-dd."
   (map #(str (day-name %) "<br>" (f/unparse MM-dd-formatter %)) (work-week date)))
 
@@ -46,7 +46,7 @@
    "timesheet.html"
    {:enddate (formatted-end-date date) 
     :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
-    :days (formatted-work-week date) 
+    :days (work-week-header date) 
     :charges (db/get-all-charges)}))
 
 (defn timesheet-page [{:keys [params]}]

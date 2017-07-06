@@ -37,10 +37,10 @@
 (deftest test-formatted-week
   (testing "Html strings for the webpage."
     (let [thedate (t/date-time 2015 06 4)]
-    (is (= "Sunday<br>05-31" (nth (formatted-work-week thedate) 0)))
-    (is (= "Monday<br>06-01" (nth (formatted-work-week thedate) 1)))
-    (is (= "Tuesday<br>06-02" (nth (formatted-work-week thedate) 2)))
-    (is (= "Wednesday<br>06-03" (nth (formatted-work-week thedate) 3))))))
+    (is (= "Sunday<br>05-31" (nth (work-week-header thedate) 0)))
+    (is (= "Monday<br>06-01" (nth (work-week-header thedate) 1)))
+    (is (= "Tuesday<br>06-02" (nth (work-week-header thedate) 2)))
+    (is (= "Wednesday<br>06-03" (nth (work-week-header thedate) 3))))))
 
 (deftest test-formatted-end-date-1
   (testing "Testing  the week of the 4th ends on Saturday the 10th."
