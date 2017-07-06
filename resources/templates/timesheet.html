@@ -7,27 +7,27 @@ form
 }
 </style>
 <div style="text-align:right">
-    <form method="POST" action="/timesheet_next">
-      {% csrf-field %}
-      <input type="text"
-             style="display:none"
-             name="enddate"
-             value="{{enddate}}" />
-      <input type="submit" class="btn btn-primary" name="forward" value="->" />
-    </form>
-    <form method="POST" action="/timesheet_back">
-      {% csrf-field %}
-      Period End Date:
-      <input type="text"
-             name="enddate"
-             style="displayenddate"
-             value="{{enddate}}" disabled/>
-      <input type="text"
-             style="display:none"
-             name="enddate"
-             value="{{enddate}}" />
-      <input type="submit" class="btn btn-primary" name="backward" value="<-" />
-    </form>
+  <form method="POST" action="/timesheet_next">
+    {% csrf-field %}
+    <input type="text"
+           style="display:none"
+           name="enddate"
+           value="{{enddate}}" />
+    <input type="submit" class="btn btn-primary" name="forward" value="->" />
+  </form>
+  <form method="POST" action="/timesheet_back">
+    {% csrf-field %}
+    Period End Date:
+    <input type="text"
+           name="enddate"
+           style="displayenddate"
+           value="{{enddate}}" disabled/>
+    <input type="text"
+           style="display:none"
+           name="enddate"
+           value="{{enddate}}" />
+    <input type="submit" class="btn btn-primary" name="backward" value="<-" />
+  </form>
 </div>
 
 <div class="row">
@@ -35,31 +35,45 @@ form
     <table class="timesheet fixed table table-bordered table-striped table-highlight">
       <thead>
         <tr style="background-color:#0d47a1;color:#ffffff">
-        <th style="width: 180px;text-align: center;">Name</th>
-        {% for day in days %}
-        <th style="width: 80px;text-align: center;">{{day|safe}}</th>
-        {% endfor %}
-        <th style="width: 30px;text-align: center;">Total</th>
+          <th style="width: 180px;text-align: center;">Name</th>
+          {% for day in days %}
+          <th style="width: 80px;text-align: center;">{{day|safe}}</th>
+          {% endfor %}
+          <th style="width: 30px;text-align: center;">Total</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <form>
-          <td>
-            <select>
-              {% for charge in charges %}
-              <option value="{{charge.id}}">{{charge.name}}</option>
-              {% endfor %}
-            </select>
-          </td>
-        {% for day in dates %}
-        <td style="width: 30px;text-align: center;"><input type="text" name="{{day}}" size="4"/> </td>
-        {% endfor %}
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center;"><input onblur="findTotal('row1')" type="text" name="row1" id="{{day}}" size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row1" size="4"/> </td>
           </form>
         </tr>
         <tr>
       </tbody>
     </table>
   </div>
+
+  <script type="text/javascript">
+function findTotal(name){
+  var arr = document.getElementsByName(name);
+  var tot=0;
+  for(var i=0;i<arr.length;i++){
+    if(parseInt(arr[i].value))
+      tot += parseInt(arr[i].value);
+  }
+  document.getElementById(name).value = tot;
+}
+  </script>
+
 </div>
 {% endblock %}
