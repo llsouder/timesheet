@@ -53,7 +53,12 @@ form
               </select>
             </td>
             {% for day in dates %}
-            <td style="width: 30px;text-align: center;"><input onblur="findTotal('row1')" type="text" name="row1" id="{{day}}" size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#666666{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+              type="text" 
+              name="row1" 
+              id="{{day}}" 
+              size="4"/> </td>
             {% endfor %}
             <td style="width: 30px;text-align: center;"><input type="text" id="row1" size="4"/> </td>
           </form>
