@@ -42,9 +42,10 @@ form
           <th style="width: 30px;text-align: center;">Total</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <form>
+      <form>
+        <tbody>
+          <!--row1-->
+          <tr>
             <td>
               <select>
                 {% for charge in charges %}
@@ -53,18 +54,123 @@ form
               </select>
             </td>
             {% for day in dates %}
-            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#666666{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
               <input onblur="findTotal('row1')" 
-              type="text" 
-              name="row1" 
-              id="{{day}}" 
-              size="4"/> </td>
+                     type="text" 
+                     name="row1" 
+                     id="{{day}}" 
+                     size="4"/> </td>
             {% endfor %}
             <td style="width: 30px;text-align: center;"><input type="text" id="row1" size="4"/> </td>
-          </form>
-        </tr>
-        <tr>
-      </tbody>
+          </tr>
+          <!--end of row1-->
+          <!--row2-->
+          <tr>
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2" 
+                     id="{{day}}" 
+                     size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row2" size="4"/> </td>
+          </tr>
+          <!--end of row2-->
+          <!--row3-->
+          <tr>
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3" 
+                     id="{{day}}" 
+                     size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row3" size="4"/> </td>
+          </tr>
+          <!--end of row3-->
+          <!--row4-->
+          <tr>
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4" 
+                     id="{{day}}" 
+                     size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row4" size="4"/> </td>
+          </tr>
+          <!--end of row4-->
+          <!--row5-->
+          <tr>
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5" 
+                     id="{{day}}" 
+                     size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row5" size="4"/> </td>
+          </tr>
+          <!--end of row5-->
+          <!--row6-->
+          <tr>
+            <td>
+              <select>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            {% for day in dates %}
+            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6" 
+                     id="{{day}}" 
+                     size="4"/> </td>
+            {% endfor %}
+            <td style="width: 30px;text-align: center;"><input type="text" id="row6" size="4"/> </td>
+          </tr>
+          <!--end of row6-->
+          <tr>
+            <td colspan="2"><input type="text" name="Signature" value="" /></td>
+            <td colspan="5"></td>
+            <td colspan="2"><input type="submit" class="btn btn-primary" name="Submit" value="Submit" /></td>
+          </tr>
+        </tbody>
+      </form>
     </table>
   </div>
 
