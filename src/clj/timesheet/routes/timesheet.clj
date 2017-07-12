@@ -47,6 +47,7 @@
    {:enddate (formatted-end-date date) 
     :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
     :days (work-week-header date) 
+    :rows (range 5) 
     :charges (db/get-all-charges)}))
 
 (defn timesheet-page [{:keys [params]}]
