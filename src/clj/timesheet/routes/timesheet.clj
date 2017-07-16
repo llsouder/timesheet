@@ -42,6 +42,7 @@
   (map #(str (day-name %) "<br>" (f/unparse MM-dd-formatter %)) (work-week date)))
 
 (defn rows [rows]
+  "Returns a seq of numbers starting from 1 and ending wth rows inclusive because (rows 5) reads better than (range 1 6)."
   (range 1 (+ rows 1)))
 
 (defn timesheet-page-for [date]
