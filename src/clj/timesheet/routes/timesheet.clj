@@ -41,13 +41,16 @@
   "Return seven days starting on Sunday. Format is name, <br>,  MM-dd."
   (map #(str (day-name %) "<br>" (f/unparse MM-dd-formatter %)) (work-week date)))
 
+(defn rows [rows]
+  (range 1 (+ rows 1)))
+
 (defn timesheet-page-for [date]
   (layout/render
    "timesheet.html"
    {:enddate (formatted-end-date date) 
     :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
     :days (work-week-header date) 
-    :rows (range 5) 
+    :rows (rows 7)
     :charges (db/get-all-charges)}))
 
 (defn timesheet-page [{:keys [params]}]

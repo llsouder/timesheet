@@ -43,11 +43,17 @@
     (is (= "Wednesday<br>06-03" (nth (work-week-header thedate) 3))))))
 
 (deftest test-formatted-end-date-1
-  (testing "Testing  the week of the 4th ends on Saturday the 10th."
+  (testing "Testing the week of the 4th ends on Saturday the 10th."
     (let [thedate (t/date-time 2017 06 4)]
     (is (= "06-10-2017" (formatted-end-date thedate))))))
 
 (deftest test-formatted-end-date-2
-  (testing "Testing  the week of the 5-28 ends on Saturday the 3rd."
+  (testing "Testing the week of the 5-28 ends on Saturday the 3rd."
     (let [thedate (t/date-time 2017 05 30)]
     (is (= "06-03-2017" (formatted-end-date thedate))))))
+
+(deftest test-rows
+  (testing "Testing the non zero and inclusive range function I call rows."
+    (is (= '(1 2 3) (rows 3)))
+    (is (= '() (rows 0)))
+    (is (= '() (rows -3)))))

@@ -45,8 +45,7 @@ form
       <form>
         <tbody>
             {% for row in rows %}
-            {% with row-count=forloop.counter %}
-	    <!--row{{row-count}}-->
+	    <!--row{{row}}-->
           <tr>
             <td>
               <select>
@@ -57,16 +56,15 @@ form
             </td>
             {% for day in dates %}
             <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
-		    <input onblur="findTotal('row{{row-count}}')" 
+		    <input onblur="findTotal('row{{row}}')" 
                      type="text" 
-		     name="row{{row-count}}" 
+		     name="row{{row}}" 
                      id="{{day}}" 
                      size="4"/> </td>
             {% endfor %}
-	    <td style="width: 30px;text-align: center;"><input type="text" id="row{{row-count}}" size="4"/> </td>
+	    <td style="width: 30px;text-align: center;"><input type="text" id="row{{row}}" size="4"/> </td>
           </tr>
-	  <!--end of row{{row-count}}-->
-            {% endwith %}
+	  <!--end of row{{row}}-->
             {% endfor %}
           <tr>
             <td colspan="2"><input type="text" name="Signature" value="" /></td>
