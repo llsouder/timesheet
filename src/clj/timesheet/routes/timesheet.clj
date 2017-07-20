@@ -53,25 +53,6 @@
   [rows]
   (range 1 (+ rows 1)))
 
-(defn timesheet-page-for [date]
-  (layout/render
-   "timesheet.html"
-   {:enddate (formatted-end-date date) 
-    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
-    :days (work-week-header date) 
-    :rows (rows num-of-rows)
-    :charges (db/get-all-charges)}))
-
-(defn timesheet-page [{:keys [params]}]
-  (timesheet-page-for (t/now)))
-   
-(defn timesheet-page-next [{:keys [params]}]
-  (let [date (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
-    (timesheet-page-for date)))
-
-(defn timesheet-page-back [{:keys [params]}]
-  (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
-    (timesheet-page-for date)))
 
 (def charge-keys 
   (map #(keyword (str "charge-row" %)) (rows num-of-rows)))
@@ -99,11 +80,31 @@
       ;;collect each cells data for that row
       (let [row (get-row  charge)]
              (get-cell-keys-for row )))))
+
+(defn timesheet-page-for [date]
+  (layout/render
+   "timesheet.html"
+   {:enddate (formatted-end-date date) 
+    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
+    :days (work-week-header date) 
+    :rows (rows num-of-rows)
+    :charges (db/get-all-charges)}))
+
 (defn submit-time [{:keys [params]}]
   (parse-submitted-data params)
   (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
     (timesheet-page-for date)))
 
+(defn timesheet-page [{:keys [params]}]
+  (timesheet-page-for (t/now)))
+   
+(defn timesheet-page-next [{:keys [params]}]
+  (let [date (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
+    (timesheet-page-for date)))
+
+(defn timesheet-page-back [{:keys [params]}]
+  (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
+    (timesheet-page-for date)))
 
 (defroutes timesheet-routes
   (POST "/timesheet_submit" request (submit-time request))
