@@ -28,6 +28,7 @@
                  [ring/ring-core "1.6.0"]
                  [ring/ring-defaults "0.3.0"]
                  [clj-time "0.13.0"]
+                 [com.taoensso/timbre "4.10.0"]
                  [selmer "1.10.7"]]
 
   :min-lein-version "2.0.0"
