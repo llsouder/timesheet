@@ -42,13 +42,19 @@ form
           <th style="width: 30px;text-align: center;">Total</th>
         </tr>
       </thead>
-      <form>
+      <form method="POST" id="timesheet" action="/timesheet_submit" onsubmit="emptyValue()">
+        <input type="text"
+               style="display:none"
+               name="enddate"
+               value="{{enddate}}" />
+        {% csrf-field %}
         <tbody>
-            {% for row in rows %}
-	    <!--row{{row}}-->
+          {% for row in rows %}
+          <!--row{{row}}-->
           <tr>
             <td>
-              <select>
+              <select name="charge-row{{row}}" form="timesheet">
+                <option value=""></option>
                 {% for charge in charges %}
                 <option value="{{charge.id}}">{{charge.name}}</option>
                 {% endfor %}
@@ -56,20 +62,20 @@ form
             </td>
             {% for day in dates %}
             <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
-		    <input onblur="findTotal('row{{row}}')" 
+              <input onblur="findTotal('row{{row}}')" 
                      type="text" 
-		     name="row{{row}}" 
+                     name="row{{row}}-{{forloop.counter}}" 
                      id="{{day}}" 
                      size="4"/> </td>
             {% endfor %}
-	    <td style="width: 30px;text-align: center;"><input type="text" id="row{{row}}" size="4"/> </td>
+            <td style="width: 30px;text-align: center;"><input type="text" id="row{{row}}" size="4"/> </td>
           </tr>
-	  <!--end of row{{row}}-->
-            {% endfor %}
+          <!--end of row{{row}}-->
+          {% endfor %}
           <tr>
             <td colspan="2"><input type="text" name="Signature" value="" /></td>
             <td colspan="5"></td>
-            <td colspan="2"><input type="submit" class="btn btn-primary" name="Submit" value="Submit" /></td>
+            <td colspan="2"><input type="submit" class="btn btn-primary" name="submit" value="Submit" /></td>
           </tr>
         </tbody>
       </form>
@@ -77,16 +83,28 @@ form
   </div>
 
   <script type="text/javascript">
+
 function findTotal(name){
-  var arr = document.getElementsByName(name);
   var tot=0;
-  for(var i=0;i<arr.length;i++){
-    if(parseInt(arr[i].value))
-      tot += parseInt(arr[i].value);
-  }
+  {% for day in days %}
+  var arr = document.getElementsByName(name + '-' + {{forloop.counter}})[0];
+    if(parseInt(arr.value))
+      tot += parseInt(arr.value);
+  {% endfor %}
   document.getElementById(name).value = tot;
+}
+
+function emptyValue(){
+  {% for row in rows %}
+  var arr = document.getElementsByName('row'+{{row}});
+  for(var i=0;i<arr.length;i++){
+    if(arr[i].value=="") {
+      arr[i].value="---";
+    }
+  }
+  {% endfor %}
 }
   </script>
 
 </div>
-{% endblock %}
+  {% endblock %}

@@ -57,3 +57,21 @@
     (is (= '(1 2 3) (rows 3)))
     (is (= '() (rows 0)))
     (is (= '() (rows -3)))))
+
+(deftest test-make-cell-key
+  (testing "The cell key is the key found on the web page."
+    (is (= :row1-1 (make-cell-key 1 1)))
+    (is (= :row4-2 (make-cell-key 4 2)))
+    (is (= :row2-7 (make-cell-key 2 7)))))
+
+(def row8-keys '(:row8-1 :row8-2 :row8-3 :row8-4 :row8-5 :row8-6 :row8-7))
+
+(deftest test-get-cell-keys-for
+  (testing "Testing the that all the keys for a row are built."
+    (is (= row8-keys (get-cell-keys-for 8)))))
+
+(deftest test-get-row
+  (testing "Testing the get-row conversion from the charge key"
+    (is (= 1 (get-row :charge-row1)))
+    (is (= 2 (get-row :charge-row2)))))
+
