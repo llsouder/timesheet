@@ -58,7 +58,7 @@
   (map #(keyword (str "charge-row" %)) (rows num-of-rows)))
 
 (defn get-row 
-  "Take the keyword and return the row number."
+  "Take the charge keyword and return the row number."
   [charge]
   (Integer. (str (last (name charge)))))
 
@@ -72,14 +72,29 @@
   [row]
   (map #(make-cell-key row %) (range 1 8)))
 
-(defn parse-submitted-data [params]
+(defn get-cell-keys-schema 
+  "Returns a vector of cell keys."
+  [row]
+  (map #(into [] (make-cell-key row %) st/integer-str) (range 1 8)))
+
+(def timesheet-schema 
+  (map get-cell-keys-schema (rows num-of-rows)))
+
+ (defn validate-message [params]
+  (first (st/validate params timesheet-schema)))
+
+(defn parse-submitted-data 
+  [params]
+(if-let [errors (validate-message params)]
+    (-> (response/found "/timesheet")
+        (assoc :flash (assoc params :errors errors)))
   ;;look through the keys
   (doseq [charge charge-keys]
     ;;if there is a charge code
     (if (not-empty (charge params))
       ;;collect each cells data for that row
       (let [row (get-row  charge)]
-             (get-cell-keys-for row )))))
+             (get-cell-keys-for row ))))))
 
 (defn timesheet-page-for [date]
   (layout/render
@@ -90,13 +105,16 @@
     :rows (rows num-of-rows)
     :charges (db/get-all-charges)}))
 
-(defn submit-time [{:keys [params]}]
+(defn submit-time [{:keys [params flash]}]
   (parse-submitted-data params)
   (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
     (timesheet-page-for date)))
 
 (defn timesheet-page [{:keys [params]}]
-  (timesheet-page-for (t/now)))
+  (let [date (if (contains? params :enddate) 
+    (f/parse MM-dd-yyyy-formatter (:enddate params)) 
+    (t/now))]
+  (timesheet-page-for (t/now))))
    
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
