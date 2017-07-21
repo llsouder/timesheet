@@ -53,7 +53,6 @@
   [rows]
   (range 1 (+ rows 1)))
 
-
 (def charge-keys 
   (map #(keyword (str "charge-row" %)) (rows num-of-rows)))
 
@@ -72,14 +71,37 @@
   [row]
   (map #(make-cell-key row %) (range 1 8)))
 
+(def all-cells
+  "Returns a set of all the cells on the web page.  Used to determine if an item is a cell or something else on the page"
+  (into #{} (mapcat get-cell-keys-for (rows num-of-rows))))
+
+(defn is-cell? 
+  "Examine the keyword in the k v vector and determine if it is a cell on the or something else."
+  [[k v]]
+  (contains? all-cells k))
+
+(def timesheet-schema 
+  (into {} (map (juxt identity (constantly [st/integer-str]))) (get-cell-keys-for 1)))
+
+(defn timesheet-schema [row]
+  (into {} (map (juxt identity (constantly [st/integer-str]))) (get-cell-keys-for row)))
+
+(defn zero-empty-cells 
+  [params]
+  (merge params (reduce #(assoc %1 %2 "0") {} (keys (filter #(and (is-cell? %) (empty? (second %))) params))))) 
+
 (defn parse-submitted-data [params]
   ;;look through the keys
-  (doseq [charge charge-keys]
+ (doseq [charge charge-keys]
     ;;if there is a charge code
-    (if (not-empty (charge params))
+   (if (not-empty (charge params))
       ;;collect each cells data for that row
       (let [row (get-row  charge)]
-             (get-cell-keys-for row )))))
+         (info "params b4 " params)
+        (let [params (zero-empty-cells params)]
+         (info "params af " params)
+         (info "errors? " (st/validate params (timesheet-schema row ))))
+      ))))
 
 (defn timesheet-page-for [date]
   (layout/render

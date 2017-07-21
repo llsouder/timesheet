@@ -75,3 +75,10 @@
     (is (= 1 (get-row :charge-row1)))
     (is (= 2 (get-row :charge-row2)))))
 
+(def params {:row1-1 "2" :row1-2 "1" :row1-3 "" :row1-4  "" :row1-5 "" :row1-6 "8" :row1-7 "2" :Signature "" :test1 "fred"})   
+(deftest test-zero-empty-cells
+  (testing "Test making all cells and only cells zeros."
+    (let [zeros (zero-empty-cells params)]
+    (is (= "2" (:row1-1 zeros)))
+    (is (= "0" (:row1-4 zeros)))
+    (is (= "" (:Signature zeros))))))
