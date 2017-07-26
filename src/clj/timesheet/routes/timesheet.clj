@@ -103,12 +103,12 @@
          (info "errors? " (st/validate params (timesheet-schema row ))))
       ))))
 
-(defn timesheet-page-for [date]
+(defn timesheet-page-for [{:keys [flash]}]
   (layout/render
    "timesheet.html"
-   {:enddate (formatted-end-date date) 
-    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week date))
-    :days (work-week-header date) 
+   {:enddate (formatted-end-date (:date flash)) 
+    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week (:date flash)))
+    :days (work-week-header (:date flash)) 
     :rows (rows num-of-rows)
     :charges (db/get-all-charges)}))
 
@@ -118,15 +118,15 @@
     (timesheet-page-for date)))
 
 (defn timesheet-page [{:keys [params]}]
-  (timesheet-page-for (t/now)))
+  (timesheet-page-for {:flash (assoc params :date (t/now))}))
    
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
-    (timesheet-page-for date)))
+    (timesheet-page-for {:flash (assoc params :date date)})))
 
 (defn timesheet-page-back [{:keys [params]}]
   (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
-    (timesheet-page-for date)))
+    (timesheet-page-for {:flash (assoc params :date date)})))
 
 (defroutes timesheet-routes
   (POST "/timesheet_submit" request (submit-time request))
