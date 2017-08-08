@@ -42,37 +42,307 @@ form
           <th style="width: 30px;text-align: center;">Total</th>
         </tr>
       </thead>
-      <form method="POST" id="timesheet" action="/timesheet_submit" onsubmit="emptyValue()">
+      <form method="POST" id="timesheet" action="/timesheet_submit">
         <input type="text"
                style="display:none"
                name="enddate"
                value="{{enddate}}" />
         {% csrf-field %}
         <tbody>
-          {% for row in rows %}
-          <!--row{{row}}-->
+          <!--row1-->
           <tr>
             <td>
-              <select name="charge-row{{row}}" form="timesheet">
+              <select name="charge-row1" form="timesheet">
                 <option value=""></option>
                 {% for charge in charges %}
                 <option value="{{charge.id}}">{{charge.name}}</option>
                 {% endfor %}
               </select>
             </td>
-            {% for day in dates %}
-            <td style="width: 30px;text-align: center; background-color:{% if forloop.counter|weekend? %}#606060{% else %}#FFFFFF{% endif %}; color: #ff0000 ;">
-              <input onblur="findTotal('row{{row}}')" 
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
                      type="text" 
-                     name="row{{row}}-{{forloop.counter}}" 
-                     id="{{day}}" 
+                     name="row1-0" 
                      size="4"/> </td>
-            {% endfor %}
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row1')" 
+                     type="text" 
+                     name="row1-6" 
+                     size="4"/> </td>
             <!--total-->
-            <td style="width: 30px;text-align:enter;"><input type="text" id="row{{row}}" size="4"/> </td>
+            <td style="width: 30px;text-align: center;"><input type="text" id="row1" size="4"/> </td>
           </tr>
-          <!--end of row{{row}}-->
-          {% endfor %}
+          <!--end of row1-->
+          <!--row2-->
+          <tr>
+            <td>
+              <select name="charge-row2" form="timesheet">
+                <option value=""></option>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-0" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row2')" 
+                     type="text" 
+                     name="row2-6" 
+                     size="4"/> </td>
+            <!--total-->
+            <td style="width: 30px;text-align: center;"><input type="text" id="row2" size="4"/> </td>
+          </tr>
+          <!--end of row2-->
+          <!--row3-->
+          <tr>
+            <td>
+              <select name="charge-row3" form="timesheet">
+                <option value=""></option>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-0" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row3')" 
+                     type="text" 
+                     name="row3-6" 
+                     size="4"/> </td>
+            <!--total-->
+            <td style="width: 30px;text-align: center;"><input type="text" id="row3" size="4"/> </td>
+          </tr>
+          <!--end of row3-->
+          <!--row4-->
+          <tr>
+            <td>
+              <select name="charge-row4" form="timesheet">
+                <option value=""></option>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-0" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row4')" 
+                     type="text" 
+                     name="row4-6" 
+                     size="4"/> </td>
+            <!--total-->
+            <td style="width: 30px;text-align: center;"><input type="text" id="row4" size="4"/> </td>
+          </tr>
+          <!--end of row4-->
+          <!--row5-->
+          <tr>
+            <td>
+              <select name="charge-row5" form="timesheet">
+                <option value=""></option>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-0" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row5')" 
+                     type="text" 
+                     name="row5-6" 
+                     size="4"/> </td>
+            <!--total-->
+            <td style="width: 30px;text-align: center;"><input type="text" id="row5" size="4"/> </td>
+          </tr>
+          <!--end of row5-->
+          <!--row6-->
+          <tr>
+            <td>
+              <select name="charge-row6" form="timesheet">
+                <option value=""></option>
+                {% for charge in charges %}
+                <option value="{{charge.id}}">{{charge.name}}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-0" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-1" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-2" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-3" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-4" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-5" 
+                     size="4"/> </td>
+            <td style="width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;">
+              <input onblur="findTotal('row6')" 
+                     type="text" 
+                     name="row6-6" 
+                     size="4"/> </td>
+            <!--total-->
+            <td style="width: 30px;text-align: center;"><input type="text" id="row6" size="4"/> </td>
+          </tr>
+          <!--end of row6-->
           <tr>
             <td colspan="2"><input type="text" name="Signature" value="" /></td>
             <td colspan="5"></td>
@@ -87,25 +357,14 @@ form
 
 function findTotal(name){
   var tot=0;
-  {% for day in days %}
-  var arr = document.getElementsByName(name + '-' + {{forloop.counter}})[0];
+  for (i = 0; i < 7; i++) {
+    var arr = document.getElementsByName(name + '-' + i)[0];
     if(parseInt(arr.value))
       tot += parseInt(arr.value);
-  {% endfor %}
-  document.getElementById(name).value = tot;
-}
-
-function emptyValue(){
-  {% for row in rows %}
-  var arr = document.getElementsByName('row'+{{row}});
-  for(var i=0;i<arr.length;i++){
-    if(arr[i].value=="") {
-      arr[i].value="---";
-    }
+    document.getElementById(name).value = tot;
   }
-  {% endfor %}
 }
   </script>
 
 </div>
-  {% endblock %}
+{% endblock %}
