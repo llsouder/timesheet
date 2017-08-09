@@ -29,6 +29,7 @@
                  [ring/ring-defaults "0.3.0"]
                  [clj-time "0.13.0"]
                  [com.taoensso/timbre "4.10.0"]
+                 [hiccup "1.0.5"]
                  [selmer "1.10.7"]]
 
   :min-lein-version "2.0.0"
@@ -66,7 +67,8 @@
                   
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user}
+                  :repl-options {:init-ns user
+                                 :timeout 120000 }
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
    :project/test {:resource-paths ["env/test/resources"]}
