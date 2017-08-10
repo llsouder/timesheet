@@ -19,11 +19,22 @@
                   :data-target "#collapsing-navbar"}
               "&#9776;" ]
             [:div {:class "collapse navbar-toggleable-xs" :id "collapsing-navbar"}
-              [:a {:class "navbar-brand" :href "{{servlet-context}}/"} "timesheet"]
-              [:ul {:class="nav navbar-nav"}
-                  [:li {:class="nav-item"}
-                      [:a {:href servlet-context :class (str "nav-link " (active page "home.html")) }
-                      "home"]]]]]]])
+              [:a {:class "navbar-brand" :href (str servlet-context "/")} "timesheet"]
+              [:ul {:class "nav navbar-nav"}
+                  [:li {:class "nav-item"}
+                      [:a {:href (str servlet-context "/") :class (str "nav-link " (active page "home.html")) }
+                      "home"]]
+                  [:li {:class "nav-item"}
+                      [:a {:href (str servlet-context "/timesheet") :class (str "nav-link " (active page "timesheet.html")) }
+                      "timesheet"]]
+                  [:li {:class "nav-item"}
+                      [:a {:href (str servlet-context "/about") :class (str "nav-link " (active page "about.html")) }
+                      "about"]]
+                  
+                  ]
+              
+              
+              ]]]])
 
 
 
