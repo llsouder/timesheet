@@ -12,12 +12,14 @@
 
 (defn home-page []
   ;;(layout/render "home.html"))
-  (hc/html (view/base {:page "home.html" :servlet-context ""})))
+  (hc/html (view/base "home" "" "")))
 
 (defn about-page []
-  (layout/render "about.html"))
+  (let[stuff (layout/render "about.html")]
+    (view/add-base "about" stuff)))
 
 (defroutes home-routes
   (GET "/" [] (home-page))
+  (GET "/home" [] (home-page))
   (GET "/about" [] (about-page)))
 

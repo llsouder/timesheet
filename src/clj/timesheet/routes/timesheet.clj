@@ -4,6 +4,7 @@
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
             [timesheet.db.core :as db]
+            [timesheet.views :as view]
             [ring.util.response :refer [redirect]]
             [struct.core :as st]
             [clj-time.format :as f]
@@ -104,13 +105,14 @@
       ))))
 
 (defn timesheet-page-for [{:keys [flash]}]
-  (layout/render
-   "timesheet.html"
-   {:enddate (formatted-end-date (:date flash)) 
-    :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week (:date flash)))
-    :days (work-week-header (:date flash)) 
-    :rows (rows num-of-rows)
-    :charges (db/get-all-charges)}))
+  (let[stuff (layout/render
+              "timesheet.html"
+              {:enddate (formatted-end-date (:date flash)) 
+               :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week (:date flash)))
+               :days (work-week-header (:date flash)) 
+               :rows (rows num-of-rows)
+               :charges (db/get-all-charges)})]
+  (view/add-base "timesheet" stuff )))
 
 (defn submit-time [{:keys [params]}]
   (parse-submitted-data params)

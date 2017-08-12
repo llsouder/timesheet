@@ -4,7 +4,13 @@
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
             [timesheet.db.core :as db]
-            [clojure.tools.logging :as log]
+            [timesheet.views :as view]
+            [hiccup.core :as hc]
+            [taoensso.timbre :as timbre
+             :refer [log  trace  debug  info  warn  error  fatal  report
+                     logf tracef debugf infof warnf errorf fatalf reportf
+                     spy get-env]]
+
             [ring.util.response :refer [redirect]]
             [struct.core :as st]))
 
@@ -24,17 +30,19 @@
       (db/create-charge! params)
       (response/found "/charge"))))
 
+
 (defn charge-page [{:keys [flash]}]
-  (layout/render
-    "charge.html"
-    (merge {:charges (db/get-all-charges)}
-           (select-keys flash [:employee_number :first_name :last_name :dob :errors]))))
+  (let [stuff (layout/render
+        "charge.html"
+        (merge {:charges (db/get-all-charges)}
+               (select-keys flash [:employee_number :first_name :last_name :dob :errors])))]
+    (view/add-base "charge" stuff)))
+   
 
 (defn delete-charge! [{:keys [params]}]
-  (log/info "delete a charge code:" (keys params))
-    (do
-      (db/delete-charge! params)
-      (response/found "/charge")))
+  (do
+    (db/delete-charge! params)
+    (response/found "/charge")))
 
 (defroutes charge-routes
   (GET "/charge" request (charge-page request))

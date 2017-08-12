@@ -4,6 +4,7 @@
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
             [timesheet.db.core :as db]
+            [timesheet.views :as view]
             [clojure.tools.logging :as log]
             [ring.util.response :refer [redirect]]
             [struct.core :as st]))
@@ -60,10 +61,11 @@
       (response/found "/admin"))))
 
 (defn admin-page [{:keys [flash]}]
-  (layout/render
+  (let [stuff (layout/render
    "admin.html"
    (merge {:employees (db/get-all-employees)}
-          (select-keys flash [:employee_number :first_name :last_name :dob :errors]))))
+          (select-keys flash [:employee_number :first_name :last_name :dob :errors])))]
+  (view/add-base "admin" stuff)))
 
 (defroutes admin-routes
   (GET "/admin" request (admin-page request))
