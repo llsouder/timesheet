@@ -1,7 +1,7 @@
 (defproject timesheet "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Web app to track hours charged."
+  :url "http://github.com/llsouder/timesheet.git"
 
   :dependencies [[com.h2database/h2 "1.4.193"]
                  [compojure "1.6.0"]
@@ -47,6 +47,7 @@
             [migratus-lein "0.4.7"]
             [quickie "0.4.1"]
             [lein-immutant "2.1.0"]
+            [cider/cider-nrepl "0.15.0"]
             [lein-cloverage "1.0.9"]]
 
   :profiles
