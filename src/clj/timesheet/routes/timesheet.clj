@@ -70,7 +70,7 @@
 (defn get-cell-keys-for 
   "Returns a vector of cell keys."
   [row]
-  (map #(make-cell-key row %) (range 1 8)))
+  (map #(make-cell-key row %) (range 0 7)))
 
 (def all-cells
   "Returns a set of all the cells on the web page.  Used to determine if an item is a cell or something else on the page"
@@ -81,15 +81,15 @@
   [[k v]]
   (contains? all-cells k))
 
-(def timesheet-schema 
-  (into {} (map (juxt identity (constantly [st/integer-str]))) (get-cell-keys-for 1)))
-
 (defn timesheet-schema [row]
   (into {} (map (juxt identity (constantly [st/integer-str]))) (get-cell-keys-for row)))
 
 (defn zero-empty-cells 
   [params]
-  (merge params (reduce #(assoc %1 %2 "0") {} (keys (filter #(and (is-cell? %) (empty? (second %))) params))))) 
+  (merge params (reduce #(assoc %1 %2 "0") {} (keys (filter #(and (is-cell? %) (empty? (second %))) params)))))
+
+(defn validate-row [params row]
+  (st/validate params (timesheet-schema row )))
 
 (defn parse-submitted-data [params]
   ;;look through the keys
@@ -98,26 +98,31 @@
    (if (not-empty (charge params))
       ;;collect each cells data for that row
       (let [row (get-row  charge)]
-         (info "params b4 " params)
         (let [params (zero-empty-cells params)]
-         (info "params af " params)
-         (info "errors? " (st/validate params (timesheet-schema row ))))
-      ))))
+          (let [result (validate params row)]
+            (if (first result)
+              (error "no good report:" (first result))
+              (info "add to database:" (second result)))
+            result))))))
 
 (defn timesheet-page-for [{:keys [flash]}]
+  (info ":date = "(:date flash))
   (let[stuff (layout/render
               "timesheet.html"
               {:enddate (formatted-end-date (:date flash)) 
-               :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week (:date flash)))
-               :days (work-week-header (:date flash)) 
-               :rows (rows num-of-rows)
-               :charges (db/get-all-charges)})]
-  (view/add-base "timesheet" stuff )))
+              :dates (map #(f/unparse MM-dd-yyyy-formatter %) (work-week (:date flash)))
+              :days (work-week-header (:date flash)) 
+              :rows (rows num-of-rows)
+              :charges (db/get-all-charges)})]
+    (view/add-base "timesheet" stuff )))
 
 (defn submit-time [{:keys [params]}]
-  (parse-submitted-data params)
-  (let [date (t/minus (f/parse MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
-    (timesheet-page-for date)))
+  (let [date (f/parse MM-dd-yyyy-formatter (:enddate params))
+        datamap (parse-submitted-data params)]
+    (info "datamap:" datamap)
+    (if (first datamap)
+      (error "data was bad:" (first datamap))
+      (timesheet-page-for {:flash (assoc params :date date)}))))
 
 (defn timesheet-page [{:keys [params]}]
   (timesheet-page-for {:flash (assoc params :date (t/now))}))

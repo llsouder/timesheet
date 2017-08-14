@@ -1,4 +1,4 @@
-(ns timesheet.routes.timesheet
+(ns timesheet.routes.timesheet-test
   (:require [clojure.test :refer :all]
             [clj-time.core :as t]
             [timesheet.routes.timesheet :refer :all]))
@@ -64,7 +64,7 @@
     (is (= :row4-2 (make-cell-key 4 2)))
     (is (= :row2-7 (make-cell-key 2 7)))))
 
-(def row8-keys '(:row8-1 :row8-2 :row8-3 :row8-4 :row8-5 :row8-6 :row8-7))
+(def row8-keys '(:row8-0 :row8-1 :row8-2 :row8-3 :row8-4 :row8-5 :row8-6))
 
 (deftest test-get-cell-keys-for
   (testing "Testing the that all the keys for a row are built."
@@ -75,10 +75,39 @@
     (is (= 1 (get-row :charge-row1)))
     (is (= 2 (get-row :charge-row2)))))
 
-(def params {:row1-0 "" :row1-1 "2" :row1-2 "1" :row1-3 "" :row1-4  "" :row1-5 "" :row1-6 "8" :Signature "" :test1 "fred"})   
+(deftest test-is-cell
+  (testing "for the 0 column, row1-0, row2-0, ... row(n)-0."
+    (is (= true (is-cell? [:row1-0 ""])))
+    (is (= true (is-cell? [:row4-0 ""])))
+    (is (= false (is-cell? [:row1-7 ""])))))
+
+(def params {:row1-7 "not a cell" :row1-0 "" :row1-1 "2" :row1-2 "1" :row1-3 "" :row1-4  "" :row1-5 "" :row1-6 "8" :Signature "Bubba" :test1 "fred"})
 (deftest test-zero-empty-cells
   (testing "Test making all cells and only cells zeros."
     (let [zeros (zero-empty-cells params)]
     (is (= "2" (:row1-1 zeros)))
+    (is (= "0" (:row1-0 zeros)))
     (is (= "0" (:row1-4 zeros)))
-    (is (= "" (:Signature zeros))))))
+    (is (= "not a cell" (:row1-7 zeros)))
+    (is (= "Bubba" (:Signature zeros))))))
+
+(deftest test-validation
+  (testing "Test making all cells and only cells zeros."
+    (let [result (validate-row (zero-empty-cells params) 1)]
+      (let [datamap (second result)]
+      (is (= 2 (:row1-1 datamap)))
+      (is (= 0 (:row1-0 datamap)))
+      (is (= 0 (:row1-4 datamap)))
+      (is (= "not a cell" (:row1-7 datamap)))
+      (is (= "Bubba" (:Signature datamap)))))))
+
+(def bad-data {:row1-7 "not a cell" :row1-0 "nan" :row1-1 "nan" :row1-2 "1" :row1-3 "" :row1-4  "" :row1-5 "" :row1-6 "8" :Signature "Bubba" :test1 "fred"})
+(deftest test-validation
+  (testing "Test making all cells and only cells zeros."
+    (let [result (validate-row (zero-empty-cells bad-data) 1)]
+      (let [errormap (first result)
+            datamap (second result)]
+        (is (= "must be a long" (:row1-0 errormap)))
+        (is (= "must be a long" (:row1-1 errormap)))
+        (is (= nil (:row1-2 errormap)))
+        (is (= "Bubba" (:Signature datamap)))))))
