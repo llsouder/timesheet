@@ -1,4 +1,4 @@
-(ns timesheet.test.handler
+(ns timesheet.handler_test
   (:require [clojure.test :refer :all]
             [ring.mock.request :refer :all]
             [timesheet.handler :refer :all]))
@@ -12,8 +12,16 @@
     (let [response ((app) (request :get "/about"))]
       (is (= 200 (:status response)))))
 
-  (testing "timesheet route"
+  (testing "timesheet route with unset "
     (let [response ((app) (request :get "/timesheet"))]
+      (is (= 200 (:status response)))))
+
+  (testing "admin route"
+    (let [response ((app) (request :get "/admin"))]
+      (is (= 200 (:status response)))))
+
+  (testing "charge route"
+    (let [response ((app) (request :get "/charge"))]
       (is (= 200 (:status response)))))
 
   (testing "not-found route"

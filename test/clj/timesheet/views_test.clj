@@ -1,4 +1,4 @@
-(ns timesheet.test.views
+(ns timesheet.views-test
   (:require [clojure.test :refer :all]
             [hiccup.page :as hp]
             [timesheet.views :refer :all]))

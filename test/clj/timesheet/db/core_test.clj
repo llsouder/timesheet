@@ -1,4 +1,4 @@
-(ns timesheet.test.db.core
+(ns timesheet.db.core-test
   (:require [timesheet.db.core :refer [*db*] :as db]
             [luminus-migrations.core :as migrations]
             [clojure.test :refer :all]
