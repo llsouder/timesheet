@@ -97,6 +97,15 @@
 (defn timesheet-page [{:keys [params]}]
   (timesheet-page-for {:flash (assoc params :date (t/now))}))
 
+(defn test-timesheet-page [{:keys [flash]}]
+  (let [date (t/now)]
+    (view/timesheet{:date date 
+                    :enddate (dutil/formatted-end-date date)
+                    :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week date))
+                    :days (dutil/work-week-header date)
+                    :rows (rows num-of-rows)
+                    :charges (db/get-all-charges)})))
+
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse dutil/MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
     (timesheet-page-for {:flash (assoc params :date date)})))
@@ -109,4 +118,5 @@
   (POST "/timesheet_submit" request (submit-time request))
   (POST "/timesheet_next" request (timesheet-page-next request))
   (POST "/timesheet_back" request (timesheet-page-back request))
+  (GET "/test" request (test-timesheet-page request))
   (GET "/timesheet" request (timesheet-page request)))

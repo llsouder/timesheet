@@ -50,19 +50,19 @@
      [:option {:value (:id charge)} (:name charge)])])
 
 (defn timesheet [{:keys [enddate date charges]}]
- [:div {:style "text-align:right"}
- [:form {:method "POST", :action "/timesheet_next"}
-  [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
-  [:input {:type "submit", :class "btn btn-primary", :name "forward", :value "->"}]]
- [:form {:method "POST", :action "/timesheet_back"} "Period End Date:" 
-  [:input {:type "text" :name "enddate" :style "displayenddate" :value enddate :disabled "disabled" }]
-  [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
-  [:input {:type "submit", :class "btn btn-primary", :name "backward", :value "<-"}]]]
+  (hc/html[:div {:style "text-align:right"}
+          [:form {:method "POST", :action "/timesheet_next"}
+           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
+           [:input {:type "submit", :class "btn btn-primary", :name "forward", :value "->"}]]
+          [:form {:method "POST", :action "/timesheet_back"} "Period End Date:" 
+           [:input {:type "text" :name "enddate" :style "displayenddate" :value enddate :disabled "disabled" }]
+           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
+           [:input {:type "submit", :class "btn btn-primary", :name "backward", :value "<-"}]]]
 [:div {:class "row"}
  [:div {:class "span12"}
   [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
   [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
-   [:thead  
+   [:thead
     [:tr {:style "background-color:#0d47a1;color:#ffffff"}
      [:th {:style "width: 180px;text-align: center;"} "Name"]
      ;;(add-day-header date)
@@ -96,7 +96,7 @@
      [:td {:colspan "2"}
       [:input {:type "submit", :class "btn btn-primary", :name "submit", :value "Submit"}]]]]]]
  [:script {:type "text/javascript"} "\nfunction findTotal(name){\n  var tot=0;\n  for (i = 0; i < 7; i++) {\n    var arr = document.getElementsByName(name + '-' + i)
-  [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}"]])
+  [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}"]]))
 
 (defn add-base [page {:keys [body] :as all}]
   (assoc all :body (hp/html5 (base page "" body))))
