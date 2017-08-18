@@ -103,7 +103,7 @@
 
 (def bad-data {:row1-7 "not a cell" :row1-0 "nan" :row1-1 "nan" :row1-2 "1" :row1-3 "" :row1-4  "" :row1-5 "" :row1-6 "8" :Signature "Bubba" :test1 "fred"})
 (deftest test-validation
-  (testing "Test making all cells and only cells zeros."
+  (testing "bad-data validation."
     (let [result (validate-row (zero-empty-cells bad-data) 1)]
       (let [errormap (first result)
             datamap (second result)]
@@ -111,3 +111,18 @@
         (is (= "must be a long" (:row1-1 errormap)))
         (is (= nil (:row1-2 errormap)))
         (is (= "Bubba" (:Signature datamap)))))))
+
+(def multi-bad-data {:charge-row1 "0" :row1-0 "nan" :charge-row2 "1" :row2-1 "nan" :row2-0 "nan"} )
+(deftest test-validation
+  (testing "bad-data validation."
+    (let [result (validate-row (zero-empty-cells multi-bad-data) 1)]
+      (let [errormap (first result)
+            datamap (second result)]
+        (is (= "must be a long" (:row1-0 errormap)))))))
+
+(deftest test-parse-submitted-data
+  (testing "do I get back errors for more than one row?"
+    (let [result (parse-submitted-data multi-bad-data)]
+      (println result)
+      (is (= "must be a long" (:errors result))))))
+
