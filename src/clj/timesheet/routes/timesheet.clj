@@ -10,10 +10,7 @@
             [struct.core :as st]
             [clj-time.format :as f]
             [clj-time.core :as t]
-            [taoensso.timbre :as timbre
-             :refer [log  trace  debug  info  warn  error  fatal  report
-                     logf tracef debugf infof warnf errorf fatalf reportf
-                     spy get-env]]))
+            [taoensso.timbre :as log]))
 
 (def num-of-rows 6)
 
@@ -60,9 +57,9 @@
   (st/validate params (timesheet-schema row)))
 
 (defn validate-data [charge params]
-    ;;if there is a charge code
+  ;;if there is a charge code
   (if (not-empty (charge params))
-      ;;collect each cells data for that row
+    ;;collect each cells data for that row
     (let [row (get-row  charge)
           params (zero-empty-cells params)
           result (validate-row params row)]
@@ -76,7 +73,6 @@
      :data (into {} (map :data results))}))
 
 (defn timesheet-page-for [{:keys [flash]}]
-  (info ":date = " (:date flash))
   (let [stuff (layout/render
                "timesheet.html"
                {:enddate (dutil/formatted-end-date (:date flash))
@@ -84,27 +80,29 @@
                 :days (dutil/work-week-header (:date flash))
                 :rows (rows num-of-rows)
                 :charges (db/get-all-charges)})]
+    (log/info "response = " stuff)
     (view/add-base "timesheet" stuff)))
 
 (defn submit-time [{:keys [params]}]
   (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))
         datamap (parse-submitted-data params)]
-    (info "datamap:" datamap)
+    (log/info "datamap:" datamap)
     (if (first datamap)
-      (error "data was bad:" (first datamap))
+      (log/error "data was bad:" (first datamap))
       (timesheet-page-for {:flash (assoc params :date date)}))))
 
 (defn timesheet-page [{:keys [params]}]
   (timesheet-page-for {:flash (assoc params :date (t/now))}))
 
 (defn test-timesheet-page [{:keys [flash]}]
-  (let [date (t/now)]
-    (view/timesheet{:date date 
-                    :enddate (dutil/formatted-end-date date)
-                    :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week date))
-                    :days (dutil/work-week-header date)
-                    :rows (rows num-of-rows)
-                    :charges (db/get-all-charges)})))
+  (let [ stuff(let [date (t/now)]
+                (view/timesheet{:date date
+                                :enddate (dutil/formatted-end-date date)
+                                :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week date))
+                                :days (dutil/work-week-header date)
+                                :rows (rows num-of-rows)
+                                :charges (db/get-all-charges)}))]
+    (view/add-base "timesheet" {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"} :body stuff})))
 
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse dutil/MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
