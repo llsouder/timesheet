@@ -73,7 +73,7 @@
    (str "<!--end of row" row "-->")])
 
 (defn timesheet [{:keys [enddate date charges]}]
-  (hc/html[:div {:style "text-align:right"}
+  (hc/html [:div {:style "text-align:right"}
           [:form {:method "POST", :action "/timesheet_next"}
            [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
            [:input {:type "submit", :class "btn btn-primary", :name "forward", :value "->"}]]
