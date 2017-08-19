@@ -3,6 +3,7 @@
             [hiccup.page :as hp]
             [timesheet.dateutil :as dutil]
             [clj-time.format :as f]
+            [clj-time.core :as t]
             [hiccup.page :as hp]))
 
 
@@ -42,12 +43,34 @@
     [:div {:class "container"}
      html-page]]])
 
-(defn charge-select [row charges]
-  [:select {:name (str "charge-row" row) :form "timesheet"}
-   ;;blank
-   [:option {:value "" }]
-   (for [charge charges]
-     [:option {:value (:id charge)} (:name charge)])])
+(defn add-day-header [date]
+  [:thead
+   [:tr {:style "background-color:#0d47a1;color:#ffffff"}
+    [:th {:style "width: 180px;text-align: center;"} "Name"]
+    (for [day (dutil/work-week date)]
+      [:th {:style "width: 30px; text-align: center;"} (dutil/day-name day) [:br] (f/unparse dutil/MM-dd-formatter day)])
+    [:th {:style "width: 30px;text-align: center;"} "Total"]]])
+
+  (defn charge-select [row charges]
+    [:select {:name (str "charge-row" row) :form "timesheet"}
+     ;;blank
+     [:option {:value "" }]
+     (for [charge charges]
+       [:option {:value (:id charge)} (:name charge)])])
+
+(defn hours-cell [row col]
+  [:td {:style "width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;"}
+   [:input {:onblur (str "findTotal('row" row "')"), :type "text", :name (str "row" row "-" col), :size "4"}]" "])
+
+(defn hours-row [row charges]
+  [:tr
+   (str "<!--row" row "-->")
+   [:td (charge-select row charges)]
+(for [col (range 7)]
+      (hours-cell row col))
+     [:td {:style "width: 30px;text-align: center;"}
+      [:input {:type "text", :id "row1", :size "4"}]" "]
+   (str "<!--end of row" row "-->")])
 
 (defn timesheet [{:keys [enddate date charges]}]
   (hc/html[:div {:style "text-align:right"}
@@ -62,33 +85,11 @@
  [:div {:class "span12"}
   [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
   [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
-   [:thead
-    [:tr {:style "background-color:#0d47a1;color:#ffffff"}
-     [:th {:style "width: 180px;text-align: center;"} "Name"]
-     ;;(add-day-header date)
-     [:th {:style "width: 30px;text-align: center;"} "Total"]]]
+   (add-day-header date)
    [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}]
    [:tbody
-    "<!--row1-->"
-    [:tr
-     [:td
-      (charge-select 1 charges)
-      [:td {:style "width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;"}
-       [:input {:onblur "findTotal('row1')", :type "text", :name "row1-0", :size "4"}]" "]]
-     [:td {:style "width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-1", :size "4"}]" "]
-     [:td {:style "width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-2", :size "4"}]" "]
-     [:td {:style "width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-3", :size "4"}]" "]
-     [:td {:style "width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-4", :size "4"}]" "]
-     [:td {:style "width: 30px;text-align: center; background-color:#FFFFFF; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-5", :size "4"}]" "]
-     [:td {:style "width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;"}
-      [:input {:onblur "findTotal('row1')", :type "text", :name "row1-6", :size "4"}]" "]"<!--total-->"
-     [:td {:style "width: 30px;text-align: center;"}
-      [:input {:type "text", :id "row1", :size "4"}]" "]]"<!--end of row1-->"  "<!--row2-->"
+    (hours-row 1 charges)
+    (hours-row 2 charges)
     [:tr
      [:td {:colspan "2"}
       [:input {:type "text", :name "Signature", :value ""}]]
