@@ -20,7 +20,7 @@
         :class (str "nav-link " (active page page-route)) }
     page-route]])
 
-(defn base [page servlet-context html-page] 
+(defn base [page servlet-context html-page]
   [:html
    [:head 
    (hp/include-css "/assets/bootstrap/css/bootstrap.min.css")
@@ -58,8 +58,13 @@
      (for [charge charges]
        [:option {:value (:id charge)} (:name charge)])])
 
+(defn cell-color [col]
+  (if (some #{col} [0 6])
+    "#606060"
+    "#FFFFFF"))
+
 (defn hours-cell [row col]
-  [:td {:style "width: 30px;text-align: center; background-color:#606060; color: #ff0000 ;"}
+  [:td {:style (str "width: 30px;text-align: center; background-color:" (cell-color col) "; color: #ff0000 ;")}
    [:input {:onblur (str "findTotal('row" row "')"), :type "text", :name (str "row" row "-" col), :size "4"}]" "])
 
 (defn hours-row [row charges]
