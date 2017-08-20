@@ -95,14 +95,14 @@
   (timesheet-page-for {:flash (assoc params :date (t/now))}))
 
 (defn test-timesheet-page [{:keys [flash]}]
-  (let [ stuff(let [date (t/now)]
+  (let [ html-page(let [date (t/now)]
                 (view/timesheet{:date date
                                 :enddate (dutil/formatted-end-date date)
                                 :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week date))
                                 :days (dutil/work-week-header date)
                                 :rows (rows num-of-rows)
                                 :charges (db/get-all-charges)}))]
-    (view/add-base "timesheet" {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"} :body stuff})))
+    (view/add-base "timesheet" (layout/ready-for-html html-page))))
 
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse dutil/MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]

@@ -1,6 +1,7 @@
 (ns timesheet.layout
   (:require [selmer.parser :as parser]
             [selmer.filters :as filters]
+            [hiccup.core :as hc]
             [markdown.core :refer [md-to-html-string]]
             [ring.util.http-response :refer [content-type ok]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
@@ -11,6 +12,14 @@
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 (filters/add-filter! :weekend? (fn [counter] (some #{counter} [1 7])))
+
+(defn ready-for-html
+  "Adds the content type, status, etc."
+  [html-text]
+  (content-type
+   (ok
+    html-text)
+   "text/html; charset=utf-8"))
 
 (defn render
   "renders the HTML template located relative to resources/templates"
