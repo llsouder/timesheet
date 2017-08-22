@@ -20,9 +20,9 @@
         :class (str "nav-link " (active page page-route)) }
     page-route]])
 
-(defn base [page servlet-context html-page]
-  [:html
-   [:head 
+(defn base
+  [{:keys [page servlet-context body]}]
+   (list [:head
    (hp/include-css "/assets/bootstrap/css/bootstrap.min.css")
    (hp/include-css "/assets/font-awesome/css/font-awesome.min.css")
    (hp/include-css "/css/screen.css")]
@@ -41,7 +41,7 @@
              (page-link page "timesheet" servlet-context)
              (page-link page "about" servlet-context)]]]
     [:div {:class "container"}
-     html-page]]])
+     body]]))
 
 (defn add-day-header [date]
   [:thead
@@ -51,23 +51,28 @@
       [:th {:style "width: 30px; text-align: center;"} (dutil/day-name day) [:br] (f/unparse dutil/MM-dd-formatter day)])
     [:th {:style "width: 30px;text-align: center;"} "Total"]]])
 
-  (defn charge-select [row charges]
+(defn charge-select
+  [row charges]
     [:select {:name (str "charge-row" row) :form "timesheet"}
      ;;blank
      [:option {:value "" }]
      (for [charge charges]
        [:option {:value (:id charge)} (:name charge)])])
 
-(defn cell-color [col]
+(defn cell-color
+  "Return dark gray for the weekend cells, the first and last cell."
+  [col]
   (if (some #{col} [0 6])
     "#606060"
     "#FFFFFF"))
 
-(defn hours-cell [row col]
+(defn hours-cell
+  [row col]
   [:td {:style (str "width: 30px;text-align: center; background-color:" (cell-color col) "; color: #ff0000 ;")}
    [:input {:onblur (str "findTotal('row" row "')"), :type "text", :name (str "row" row "-" col), :size "4"}]" "])
 
-(defn hours-row [row charges]
+(defn hours-row
+  [row charges]
   [:tr
    (str "<!--row" row "-->")
    [:td (charge-select row charges)]
@@ -77,7 +82,9 @@
       [:input {:type "text", :id "row1", :size "4"}]" "]
    (str "<!--end of row" row "-->")])
 
-(defn timesheet [{:keys [enddate date charges]}]
+(defn timesheet
+  "Take the params and make the timesheet page."
+  [{:keys [enddate date charges]}]
   (hc/html [:div {:style "text-align:right"}
           [:form {:method "POST", :action "/timesheet_next"}
            [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
@@ -105,6 +112,6 @@
   [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}"]]))
 
 (defn add-base [page {:keys [body] :as all}]
-  (assoc all :body (hp/html5 (base page "" body))))
+  (assoc all :body (hp/html5 (base {:page page :servlet-context "" :body body}))))
 
 (def body1 [:div {:class "super"} "This is super."])

@@ -11,8 +11,7 @@
             [struct.core :as st]))
 
 (defn home-page []
-  ;;(layout/render "home.html"))
-  (hc/html (view/base "home" "" "")))
+  (view/add-base "home" (layout/ready-for-html "")))
 
 (defn about-page []
   (let[stuff (layout/render "about.html")]
