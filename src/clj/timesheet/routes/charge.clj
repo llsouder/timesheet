@@ -6,11 +6,7 @@
             [timesheet.db.core :as db]
             [timesheet.views :as view]
             [hiccup.core :as hc]
-            [taoensso.timbre :as timbre
-             :refer [log  trace  debug  info  warn  error  fatal  report
-                     logf tracef debugf infof warnf errorf fatalf reportf
-                     spy get-env]]
-
+            [taoensso.timbre :as log]
             [ring.util.response :refer [redirect]]
             [struct.core :as st]))
 
@@ -37,7 +33,6 @@
         (merge {:charges (db/get-all-charges)}
                (select-keys flash [:employee_number :first_name :last_name :dob :errors])))]
     (view/add-base "charge" stuff)))
-   
 
 (defn delete-charge! [{:keys [params]}]
   (do
