@@ -2,6 +2,7 @@
   (:require [selmer.parser :as parser]
             [selmer.filters :as filters]
             [hiccup.core :as hc]
+            [hiccup.page :as hp]
             [markdown.core :refer [md-to-html-string]]
             [ring.util.http-response :refer [content-type ok]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
@@ -12,6 +13,18 @@
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 (filters/add-filter! :weekend? (fn [counter] (some #{counter} [1 7])))
+
+(defn render-hiccup
+  "renders the Hiccup template."
+  [templatefn page & [params]]
+  (content-type
+   (ok
+    (hp/html5 (templatefn
+              (assoc params
+                     :page page
+                     :csrf-token *anti-forgery-token*
+                     :servlet-context *app-context*))))
+   "text/html; charset=utf-8"))
 
 (defn ready-for-html
   "Adds the content type, status, etc."
