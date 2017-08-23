@@ -28,11 +28,10 @@
 
 
 (defn charge-page [{:keys [flash]}]
-  (let [stuff (layout/render
-        "charge.html"
-        (merge {:charges (db/get-all-charges)}
-               (select-keys flash [:employee_number :first_name :last_name :dob :errors])))]
-    (view/add-base "charge" stuff)))
+  (let [html-page (layout/render-hiccup view/charge "charge"
+                   (merge {:charges (db/get-all-charges)}
+                          (select-keys flash [:name :errors])))]
+    (view/add-base "charge" html-page)))
 
 (defn delete-charge! [{:keys [params]}]
   (do
