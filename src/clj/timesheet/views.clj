@@ -8,6 +8,61 @@
             [clj-time.core :as t]
             [hiccup.page :as hp]))
 
+(defn list-employees
+  [employees]
+  (for [employee employees]
+    [:tr
+     [:td (:employee_number employee)]
+     [:td (:first_name employee)]
+     [:td (:last_name employee)]
+     [:td (:dob employee)]]))
+
+(defn employee
+  [{:keys [errors employee_number employees employee_number first_name last_name dob]}]
+  [:div {:class "row"}
+   [:div {:class "row"}
+    [:table {:class "employess table table-borderd table-striped table-highlight"}
+     [:thead
+      [:th "Employee Number"]
+      [:th "First Name"]
+      [:th "Last Name"]
+      [:th "DOB"]]
+      [:tbody
+       (list-employees employees)
+       [:tr
+        [:form {:method "POST" :action "/admin"}
+         (anti-forgery-field)
+         [:td "Employee Number:"
+          [:input {:class "form-control"
+                   :type "text"
+                   :name "employee_number"
+                   :value employee_number}]
+         (if (contains? errors :employee_number)
+           [:div {:class "alert alert-danger"} (:employee_number errors)])]
+         [:td "First Name:"
+          [:input {:class "form-control"
+                   :type "text"
+                   :name "first_name"
+                   :value first_name}]
+         (if (contains? errors :first_name)
+           [:div {:class "alert alert-danger"} (:first_name errors)])]
+         [:td "Last Name:"
+          [:input {:class "form-control"
+                   :type "text"
+                   :name "last_name"
+                   :value last_name}]
+         (if (contains? errors :last_name)
+           [:div {:class "alert alert-danger"} (:last_name errors)])]
+         [:td "DOB:"
+          [:input {:class "form-control"
+                   :type "text"
+                   :name "dob"
+                   :value dob}]
+         (if (contains? errors :dob)
+           [:div {:class "alert alert-danger"} (:dob errors)])]
+         [:tr [:td [:input {:type "submit" :class "btn btn-primary" :value "save"}]]]]
+        ]]]]])
+
 (defn list-charges
   [charges]
   (for [charge charges]

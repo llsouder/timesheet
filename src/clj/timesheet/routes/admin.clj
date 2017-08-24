@@ -61,8 +61,7 @@
       (response/found "/admin"))))
 
 (defn admin-page [{:keys [flash]}]
-  (let [stuff (layout/render
-   "admin.html"
+  (let [stuff (layout/render-hiccup view/employee "admin"
    (merge {:employees (db/get-all-employees)}
           (select-keys flash [:employee_number :first_name :last_name :dob :errors])))]
   (view/add-base "admin" stuff)))
