@@ -8,6 +8,10 @@
             [clj-time.core :as t]
             [hiccup.page :as hp]))
 
+(defn about
+  [{:keys [servlet-context]}]
+  [:img {:src (str servlet-context "/img/warning_clojure.png")}])
+
 (defn list-employees
   [employees]
   (for [employee employees]

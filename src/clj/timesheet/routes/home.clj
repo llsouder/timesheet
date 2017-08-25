@@ -14,7 +14,7 @@
   (view/add-base "home" (layout/ready-for-html "")))
 
 (defn about-page []
-  (let[stuff (layout/render "about.html")]
+  (let[stuff (layout/render-hiccup view/about "about" {})]
     (view/add-base "about" stuff)))
 
 (defroutes home-routes
