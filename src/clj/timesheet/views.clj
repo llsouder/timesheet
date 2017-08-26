@@ -180,13 +180,16 @@
   "Take the params and make the timesheet page."
   [{:keys [enddate date charges]}]
   (list [:div {:style "text-align:right"}
+         "Period End Date:" 
+         [:input {:type "text" :name "enddate" :style "displayenddate" :value enddate :disabled "disabled" }]
          [:form {:method "POST", :action "/timesheet_next"}
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
           [:input {:type "submit", :class "btn btn-primary", :name "forward", :value "->"}]]
-         [:form {:method "POST", :action "/timesheet_back"} "Period End Date:" 
-          [:input {:type "text" :name "enddate" :style "displayenddate" :value enddate :disabled "disabled" }]
+
+         [:form {:method "POST", :action "/timesheet_back"} 
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
-          [:input {:type "submit", :class "btn btn-primary", :name "backward", :value "<-"}]]]
+          [:input {:type "submit", :class "btn btn-primary", :name "backward", :value "<-"}]]
+         ]
         [:div {:class "row"}
          [:div {:class "span12"}
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
@@ -194,8 +197,8 @@
            (add-day-header date)
            [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}]
            [:tbody
-            (hours-row 1 charges)
-            (hours-row 2 charges)
+            (for [row (range 6)]
+              (hours-row row charges))
             [:tr
              [:td {:colspan "2"}
               [:input {:type "text", :name "Signature", :value ""}]]

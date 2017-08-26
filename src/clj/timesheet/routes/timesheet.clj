@@ -73,14 +73,13 @@
      :data (into {} (map :data results))}))
 
 (defn timesheet-page-for [{:keys [flash]}]
-  (let [stuff (layout/render
-               "timesheet.html"
-               {:enddate (dutil/formatted-end-date (:date flash))
+  (let [stuff (layout/render-hiccup view/timesheet "timesheet"
+               {:date (:date flash)
+                :enddate (dutil/formatted-end-date (:date flash))
                 :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week (:date flash)))
                 :days (dutil/work-week-header (:date flash))
                 :rows (rows num-of-rows)
                 :charges (db/get-all-charges)})]
-    (log/info "response = " stuff)
     (view/add-base "timesheet" stuff)))
 
 (defn submit-time [{:keys [params]}]
