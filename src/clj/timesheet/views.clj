@@ -173,20 +173,24 @@
    (for [col (range 7)]
      (hours-cell row col))
    [:td {:style "width: 30px;text-align: center;"}
-    [:input {:type "text", :id "row1", :size "4"}]" "]
+    [:input {:type "text", :id (str "row" row), :size "4"}]" "]
    (str "<!--end of row" row "-->")])
 
 (defn timesheet
   "Take the params and make the timesheet page."
   [{:keys [enddate date charges]}]
-  (list [:div {:style "text-align:right"}
-         "Period End Date:" 
-         [:input {:type "text" :name "enddate" :style "displayenddate" :value enddate :disabled "disabled" }]
+  (list
+   [:style "form { float:right; }"]
+   [:div {:class "span12" :style "text-align:right"}
+         "Period End Date:"
+         [:input {:type "text" :name "enddate" :style "display-enddate" :value enddate :disabled "disabled" }]
          [:form {:method "POST", :action "/timesheet_next"}
+          (anti-forgery-field)
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
           [:input {:type "submit", :class "btn btn-primary", :name "forward", :value "->"}]]
 
-         [:form {:method "POST", :action "/timesheet_back"} 
+         [:form {:method "POST", :action "/timesheet_back"}
+          (anti-forgery-field)
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
           [:input {:type "submit", :class "btn btn-primary", :name "backward", :value "<-"}]]
          ]
@@ -196,6 +200,7 @@
           [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
            (add-day-header date)
            [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}]
+           (anti-forgery-field)
            [:tbody
             (for [row (range 6)]
               (hours-row row charges))
