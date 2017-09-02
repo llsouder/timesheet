@@ -5,7 +5,8 @@
 
 (deftest test-base
   (testing "passing a map and get the base html with an active"
-    (is (.contains (hp/html5 (base "home" :servlet-context "")) "active"))))
+    (prn (hp/html5 (base {:page "home" :servlet-context "" :body ""})))
+    (is (.contains (hp/html5 (base {:page "home" :servlet-context "" :body ""})) "active"))))
 
 (deftest test-active
   (testing "returns the string 'active' when the page is equal to arg"
