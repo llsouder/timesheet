@@ -196,11 +196,11 @@
          ]
         [:div {:class "row"}
          [:div {:class "span12"}
-          [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
           [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
            (add-day-header date)
            [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}
            (anti-forgery-field)
+           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
            [:tbody
             (for [row (range 6)]
               (hours-row row charges))
