@@ -199,7 +199,7 @@
           [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
           [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
            (add-day-header date)
-           [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}]
+           [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}
            (anti-forgery-field)
            [:tbody
             (for [row (range 6)]
@@ -209,7 +209,8 @@
               [:input {:type "text", :name "Signature", :value ""}]]
              [:td {:colspan "5"}]
              [:td {:colspan "2"}
-              [:input {:type "submit", :class "btn btn-primary", :name "submit", :value "Submit"}]]]]]]
+              [:input {:type "submit", :class "btn btn-primary", :name "submit", :value "Submit"}]]]]]
+           ]]
          [:script {:type "text/javascript"} "\nfunction findTotal(name){\n  var tot=0;\n  for (i = 0; i < 7; i++) {\n    var arr = document.getElementsByName(name + '-' + i)
   [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}"]]))
 
