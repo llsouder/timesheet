@@ -5,7 +5,7 @@
 
 (deftest test-rows
   (testing "Testing the non zero and inclusive range function I call rows."
-    (is (= '(1 2 3) (rows 3)))
+    (is (= '(0 1 2 ) (rows 3)))
     (is (= '() (rows 0)))
     (is (= '() (rows -3)))))
 
@@ -100,3 +100,28 @@
           expected {:charge-row0 "1" :row0-0 1, :row0-1 0 :row0-2 8}]
       (is (= expected (:data result))))))
 
+(def submit-bad-data { :params {:submit "Submit"
+                                :enddate "09-09-2017"
+                                :Signature ""
+                                :charge-row0 "1"
+                                :row0-0 "1"
+                                :row0-1 "3"
+                                :row0-2 "5"
+                                :row0-3 "dd"
+                                :row0-4 ""
+                                :row0-5 ""
+                                :row0-6 ""
+                                :charge-row1 ""
+                                :row1-0 ""
+                                :row1-1 ""
+                                :row1-2 ""
+                                :row1-3 ""
+                                :row1-4 ""
+                                :row1-5 ""
+                                :row1-6 ""}})
+
+(deftest test-submit-data
+  (testing "submit row0 with non num data dd."
+    (let [expected {:errors {:row0-3 "must be a long"}, :data {}}
+          result  (parse-submitted-data (:params submit-bad-data))]
+      (is (= expected result)))))

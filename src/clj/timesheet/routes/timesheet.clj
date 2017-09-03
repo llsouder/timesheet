@@ -17,7 +17,7 @@
 (defn rows
   "Returns a seq of numbers starting from 1 and ending wth rows inclusive because (rows 5) reads better than (range 1 6)."
   [rows]
-  (range 1 (+ rows 1)))
+  (range rows))
 
 (def charge-keys
   (map #(keyword (str "charge-row" %)) (rows num-of-rows)))
