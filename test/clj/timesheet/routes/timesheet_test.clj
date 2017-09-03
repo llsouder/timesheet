@@ -77,3 +77,26 @@
           expected {:row1-0 "must be a long" :row2-0 "must be a long" :row2-1 "must be a long"}]
       (is (= expected (:errors result))))))
 
+
+(deftest test-get-row
+  (testing "get-row single digit"
+    (is (= 9 (get-row :charge-row9)))))
+
+(deftest test-get-row-double-digit
+  (testing "get-row double digit"
+    (is (= 11 (get-row :charge-row11)))))
+
+(def zero-row-bad-data {:charge-row0 "1" :row0-0 "nan" :row0-1 "nan" :row0-2 "1"} )
+(deftest test-validate-data-zero-row
+  (testing "does the zero row even validate"
+    (let [result (validate-data :charge-row0 zero-row-bad-data)
+          expected {:row0-0 "must be a long", :row0-1 "must be a long"}]
+      (is (= expected (:errors result))))))
+
+(def zero-row-good-data {:charge-row0 "1" :row0-0 "1" :row0-1 "0" :row0-2 "8"} )
+(deftest test-validate-data-zero-row
+  (testing "does the zero row even validate"
+    (let [result (validate-data :charge-row0 zero-row-good-data)
+          expected {:charge-row0 "1" :row0-0 1, :row0-1 0 :row0-2 8}]
+      (is (= expected (:data result))))))
+

@@ -2,12 +2,12 @@
   (:require [timesheet.layout :as layout]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
-            [clojure.java.io :as io]
             [timesheet.db.core :as db]
             [timesheet.views :as view]
             [timesheet.dateutil :as dutil]
             [ring.util.response :refer [redirect]]
             [struct.core :as st]
+            [clojure.string :as str]
             [clj-time.format :as f]
             [clj-time.core :as t]
             [taoensso.timbre :as log]))
@@ -25,7 +25,7 @@
 (defn get-row
   "Take the keyword and return the row number."
   [charge]
-  (Integer. (str (last (name charge)))))
+  (Integer. (str/replace (name charge) #"charge-row" "")))
 
 (defn make-cell-key
   "Returns a keyword to match the cell on the timesheet template using the integers row and day"
@@ -85,7 +85,6 @@
 (defn submit-time [{:keys [params]}]
   (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))
         datamap (parse-submitted-data params)]
-    (log/info "datamap:" datamap)
     (if (first datamap)
       (log/error "data was bad:" (first datamap))
       (timesheet-page-for {:flash (assoc params :date date)}))))
