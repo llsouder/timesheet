@@ -122,6 +122,18 @@
 
 (deftest test-submit-data
   (testing "submit row0 with non num data dd."
-    (let [expected {:errors {:row0-3 "must be a long"}, :data {}}
+    (let [expected {:errors {:row0-3 "must be a long"}
+                    :data {}}
           result  (parse-submitted-data (:params submit-bad-data))]
+      (is (= expected result)))))
+
+(def submit-good-data (assoc-in submit-bad-data  [:params :row0-3] "6"))
+
+(deftest test-submit-data
+  (testing "submit row0 with non num data dd."
+    (let [expected {:errors {}
+                    :data {:charge-row0 "1" :row0-0 1 :row0-1 3 :row0-2 5 :row0-3 6 :row0-4 0 :row0-5 0 :row0-6 0
+                           :charge-row1 "" :row1-0 "0" :row1-1 "0" :row1-2 "0" :row1-3 "0" :row1-4 "0" :row1-5 "0" :row1-6 "0"
+                           :Signature "" :submit "Submit" :enddate "09-09-2017"}}
+          result  (parse-submitted-data (:params submit-good-data))]
       (is (= expected result)))))
