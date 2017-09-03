@@ -115,7 +115,6 @@
 
 (defn base
   [{:keys [page servlet-context body]}]
-  (log/info "base servlet-context: " servlet-context)
   (list [:head
          (hp/include-css "/assets/bootstrap/css/bootstrap.min.css")
          (hp/include-css "/assets/font-awesome/css/font-awesome.min.css")
@@ -202,7 +201,7 @@
            (anti-forgery-field)
            [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
            [:tbody
-            (for [row (range 6)]
+            (for [row (range 2)]
               (hours-row row charges))
             [:tr
              [:td {:colspan "2"}
