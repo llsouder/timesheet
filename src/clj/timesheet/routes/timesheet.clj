@@ -35,7 +35,7 @@
 (defn get-cell-keys-for
   "Returns a vector of cell keys."
   [row]
-  (map #(make-cell-key row %) (range 0 7)))
+  (into [] (map #(make-cell-key row %) (range 0 7))))
 
 (def all-cells
   "Returns a set of all the cells on the web page.  Used to determine if an item is a cell or something else on the page"
@@ -46,7 +46,8 @@
   [[k v]]
   (contains? all-cells k))
 
-(defn timesheet-schema [row]
+(defn timesheet-schema
+  [row]
   (into {} (map (juxt identity (constantly [st/integer-str]))) (get-cell-keys-for row)))
 
 (defn zero-empty-cells
@@ -67,6 +68,31 @@
         {:errors  (first result)}
         {:data  (second result)}))))
 
+(def days [:sun :mon :tue :wed :thu :fri :sat])
+
+(defn sql-cell-key
+  "Convert main form cell key to day of the week key."
+  [cell]
+  ;;based on the column number in the key
+  (nth days (Integer. (str (last (name cell))))))
+
+(defn make-sql-row-args
+  "pass in just the data part please."
+  [data]
+  (remove nil?
+          (for [charge charge-keys]
+            ;;if there is a charge code
+            (if (not-empty (charge data))
+              ;;collect each cells data for that row
+              (reduce #(assoc %1 (sql-cell-key %2) (%2 data))
+                      {:charge-id (charge data)}
+                      (get-cell-keys-for (get-row charge)))))))
+
+(defn create-hours! [{:keys [data]}]
+  (let [rowdata (make-sql-row-args data)]
+    ;;(db/create-hours! rowdata)
+    (response/found "/timesheet")))
+
 (defn parse-submitted-data [params]
   (let [results (keep #(validate-data %1 params) charge-keys)]
     {:errors (into {} (map :errors results))
@@ -74,33 +100,34 @@
 
 (defn timesheet-page-for [{:keys [flash]}]
   (let [stuff (layout/render-hiccup view/timesheet "timesheet"
-               {:date (:date flash)
-                :enddate (dutil/formatted-end-date (:date flash))
-                :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week (:date flash)))
-                :days (dutil/work-week-header (:date flash))
-                :rows (rows num-of-rows)
-                :charges (db/get-all-charges)})]
+                                    {:date (:date flash)
+                                     :enddate (dutil/formatted-end-date (:date flash))
+                                     :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week (:date flash)))
+                                     :days (dutil/work-week-header (:date flash))
+                                     :rows (rows num-of-rows)
+                                     :charges (db/get-all-charges)})]
     (view/add-base "timesheet" stuff)))
 
 (defn submit-time [{:keys [params]}]
   (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))
         datamap (parse-submitted-data params)]
-    (if (first datamap)
-      (log/error "data was bad:" (first datamap))
-      (timesheet-page-for {:flash (assoc params :date date)}))))
+    ;;datamap looks like:
+    ;;{:errors {} :data {}}
+    (if (empty? (:errors datamap))
+      (do
+        (log/info "add data to DB:" (:data datamap))
+        (-> (response/found "/timesheet")
+            (assoc :flash (assoc params :date date ))))
+      (do
+        (log/error "data was bad:" (:errors datamap))
+        (-> (response/found "/timesheet")
+            (assoc :flash (assoc params :date date :errors "errors")))))))
 
-(defn timesheet-page [{:keys [params]}]
-  (timesheet-page-for {:flash (assoc params :date (t/now))}))
-
-(defn test-timesheet-page [{:keys [flash]}]
-  (let [ html-page(let [date (t/now)]
-                (view/timesheet{:date date
-                                :enddate (dutil/formatted-end-date date)
-                                :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week date))
-                                :days (dutil/work-week-header date)
-                                :rows (rows num-of-rows)
-                                :charges (db/get-all-charges)}))]
-    (view/add-base "timesheet" (layout/ready-for-html html-page))))
+(defn timesheet-page [{:keys [flash] :as request }]
+  (log/info "*************")
+  (if  (nil? flash)
+    (timesheet-page-for {:flash (assoc {} :date (t/now)) })
+    (timesheet-page-for {:flash flash})))
 
 (defn timesheet-page-next [{:keys [params]}]
   (let [date (t/plus (f/parse dutil/MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
@@ -114,5 +141,4 @@
   (POST "/timesheet_submit" request (submit-time request))
   (POST "/timesheet_next" request (timesheet-page-next request))
   (POST "/timesheet_back" request (timesheet-page-back request))
-  (GET "/test" request (test-timesheet-page request))
   (GET "/timesheet" request (timesheet-page request)))

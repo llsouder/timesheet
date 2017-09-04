@@ -137,3 +137,19 @@
                            :Signature "" :submit "Submit" :enddate "09-09-2017"}}
           result  (parse-submitted-data (:params submit-good-data))]
       (is (= expected result)))))
+
+(def good-format-row-data (:data (parse-submitted-data (:params (assoc-in submit-bad-data  [:params :row0-3] "6")))))
+
+(deftest test-make-sql-row-args
+  (testing "format data for sql create/update."
+    (let [expected '({:charge-id "1"
+                     :sun 1
+                     :mon 3
+                     :tue 5
+                     :wed 6
+                     :thu 0
+                     :fri 0
+                     :sat 0})
+        actual (make-sql-row-args good-format-row-data)]
+    (is (= expected actual)))))
+
