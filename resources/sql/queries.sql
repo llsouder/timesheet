@@ -56,27 +56,33 @@ WHERE id = :id
 -- :doc Read all the charges.
 SELECT * FROM charge
 
+-- :name get-all-hours :? :*
+-- :doc Read all the hours for this employee.
+SELECT * FROM hours
+WHERE employee_number = :employee_number AND
+end_date = parsedatetime(:end_date , 'MM-dd-yyyy');
+
 -- :name insert-hour! :! :n
 -- :doc Insert a single hour record returning affected row count
-insert into hours (employee_number, charge_id, day, hours)
-values (:employee_number, :charge_id, :day, :hours)
+insert into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
+values (:employee_number, :charge_id, parsedatetime(:end_date, 'yyyy-MM-dd'), :sun, :mon, :tue, :wed, :thu, :fri, :sat)
 
--- :name create-hours :! :n
+-- :name create-hours! :! :n
 -- :doc Insert multiple hour records with :tuple* parameter type
-insert into hours (employee_number, charge_id, day, hours)
+insert into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
 values :tuple*:hours
 
 -- :name update-hour! :! :n
 -- :doc Update an existing hour record
 UPDATE hours
-SET hours = :hours
+SET sun = :sun, mon = :mon, tue = :tue, wed = :wed, thu = :thu, fri = :fri, sat = :sat)
 WHERE employee_number = :employee_number AND
 charge_id = :charge_id AND
-day = :day;
+end_date = :end_date;
 
 -- :name delete-hour! :! :n
 -- :doc Delete an existing hour record
 DELETE FROM hours
 WHERE employee_number = :employee_number AND
 charge_id = :charge_id AND
-day = :day;
+end_date = :end_date;

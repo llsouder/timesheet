@@ -13,6 +13,7 @@
             [taoensso.timbre :as log]))
 
 (def num-of-rows 6)
+(def employee_number "000")
 
 (defn rows
   "Returns a seq of numbers starting from 1 and ending wth rows inclusive because (rows 5) reads better than (range 1 6)."
@@ -85,37 +86,57 @@
             (if (not-empty (charge data))
               ;;collect each cells data for that row
               (reduce #(assoc %1 (sql-cell-key %2) (%2 data))
-                      {:charge-id (charge data)}
+                      {:charge_id (charge data)}
                       (get-cell-keys-for (get-row charge)))))))
 
+
+(defn convert-sql-to-form
+  "Convert data returned from sql to something I can display."
+  [row sql-data]
+  (let [webdata {:employee_number employee_number
+                 (keyword (str "charge-row" row)) (:charge_id sql-data)}]
+    (reduce #(assoc %1 (first %2) (second %2)) webdata (map (fn [col]
+           [(keyword (str "row" row "-" col))
+           ((nth days col) sql-data)]) (range 7)))))
+
 (defn create-hours! [{:keys [data]}]
-  (let [rowdata (make-sql-row-args data)]
-    ;;(db/create-hours! rowdata)
+  (log/info "***create-hours")
+  (doseq [rowdata (make-sql-row-args data)]
+    (do
+    (log/info "create hours:" (assoc rowdata :employee_number employee_number))
+    (db/insert-hour! (assoc rowdata :employee_number employee_number :end_date (dutil/format-for-sql (:enddate data)))))
     (response/found "/timesheet")))
 
 (defn parse-submitted-data [params]
+  (log/info "*parse-submitted-data")
   (let [results (keep #(validate-data %1 params) charge-keys)]
     {:errors (into {} (map :errors results))
      :data (into {} (map :data results))}))
 
+(defn get-all-hours [args]
+  (map-indexed #(convert-sql-to-form %1 %2) (db/get-all-hours args)))
+
 (defn timesheet-page-for [{:keys [flash]}]
-  (let [stuff (layout/render-hiccup view/timesheet "timesheet"
+  (let [enddate (dutil/formatted-end-date (:date flash))
+        stuff (layout/render-hiccup view/timesheet "timesheet"
                                     {:date (:date flash)
-                                     :enddate (dutil/formatted-end-date (:date flash))
+                                     :enddate enddate 
                                      :dates (map #(f/unparse dutil/MM-dd-yyyy-formatter %) (dutil/work-week (:date flash)))
                                      :days (dutil/work-week-header (:date flash))
                                      :rows (rows num-of-rows)
+                                     :row-data (get-all-hours {:employee_number employee_number :end_date enddate})
                                      :charges (db/get-all-charges)})]
     (view/add-base "timesheet" stuff)))
 
 (defn submit-time [{:keys [params]}]
+  (log/info "**submit-time")
   (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))
         datamap (parse-submitted-data params)]
     ;;datamap looks like:
     ;;{:errors {} :data {}}
     (if (empty? (:errors datamap))
       (do
-        (log/info "add data to DB:" (:data datamap))
+        (create-hours! datamap)
         (-> (response/found "/timesheet")
             (assoc :flash (assoc params :date date ))))
       (do
@@ -124,7 +145,6 @@
             (assoc :flash (assoc params :date date :errors "errors")))))))
 
 (defn timesheet-page [{:keys [flash] :as request }]
-  (log/info "*************")
   (if  (nil? flash)
     (timesheet-page-for {:flash (assoc {} :date (t/now)) })
     (timesheet-page-for {:flash flash})))

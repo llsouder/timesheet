@@ -4,8 +4,12 @@
 
 (def MM-dd-formatter (f/formatter "MM-dd"))
 (def MM-dd-yyyy-formatter (f/formatter "MM-dd-yyyy"))
+(def yyyy-MM-dd-formatter (f/formatter "yyyy-MM-dd"))
 
 (def day-names '("days are not 0 indexed so 0 is this :)" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"))
+
+(defn format-for-sql [date-string]
+  (f/unparse yyyy-MM-dd-formatter (f/parse MM-dd-yyyy-formatter date-string)))
 
 (defn day-name [date]
   "Return the name of the day."

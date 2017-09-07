@@ -142,7 +142,7 @@
 
 (deftest test-make-sql-row-args
   (testing "format data for sql create/update."
-    (let [expected '({:charge-id "1"
+    (let [expected '({:charge_id "1"
                      :sun 1
                      :mon 3
                      :tue 5
@@ -151,5 +151,25 @@
                      :fri 0
                      :sat 0})
         actual (make-sql-row-args good-format-row-data)]
-    (is (= expected actual)))))
+      (is (= expected actual)))))
 
+;;you might need to put data into h2 and retrieve it to
+;;get the data for this test correct.
+(def sql-2-web {:employee_number "000"
+                :charge_id 1
+                :end_date #inst "2017-09-09T04:00:00.000-00:00"
+                :sun 1
+                :mon 2
+                :tue 3
+                :wed 4
+                :thu 0
+                :fri 0
+                :sat 0})
+
+(deftest test-sql-2-web
+  (testing "Convert the data into a format for the web page."
+    (let [expected {:employee_number "000" :charge-row0 1 :row0-0 1
+                    :row0-1 2 :row0-2 3 :row0-3 4
+                    :row0-4 0 :row0-5 0 :row0-6 0}
+          result  (convert-sql-to-form 0 sql-2-web)]
+  (is (= expected result)))))
