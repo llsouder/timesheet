@@ -148,12 +148,14 @@
   [row charge row-data]
   (let [charge-key (keyword (str "charge-row" row))]
     (if (= (:id charge) (charge-key row-data))
-        {:value (:id charge) :selected "true" :disabled "true"}
+        {:value (:id charge) :selected "true"}
         {:value (:id charge)})))
 
 (defn charge-select
   [row charges row-data]
-  [:select {:name (str "charge-row" row) :form "timesheet"}
+  [:select
+  (conj {:name (str "charge-row" row) :form "timesheet"}
+        (when (contains? row-data (keyword (str "charge-row" row))) [:disabled "true"]))
    ;;blank
    [:option {:value "" }]
    (for [charge charges]
