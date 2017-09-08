@@ -189,6 +189,7 @@
   "Take the params and make the timesheet page."
   [{:keys [enddate date charges row-data] :as all}]
   (list
+   [:script {:type "text/javascript"} "window.onload = function(){findAllTotals();}"]
    [:style "form { float:right; }"]
    [:div {:class "span12" :style "text-align:right"}
     "Period End Date:"
@@ -210,7 +211,7 @@
       [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}
        (anti-forgery-field)
        [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
-       [:tbody
+       [:tbody {:onload "findAllTotals()"}
         (let [my-data (reduce #(merge %1 %2) {} row-data)]
           (for [row (range 6)]
             (hours-row row charges my-data)))
@@ -222,7 +223,13 @@
           [:input {:type "submit", :class "btn btn-primary", :name "submit", :value "Submit"}]]]]]
       ]]
     [:script {:type "text/javascript"} "\nfunction findTotal(name){\n  var tot=0;\n  for (i = 0; i < 7; i++) {\n    var arr = document.getElementsByName(name + '-' + i)
-  [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}"]]))
+  [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}
+function findAllTotals() {
+var names = ['row0', 'row1', 'row2', 'row3', 'row4', 'row5'];
+names.forEach(function(element){
+findTotal(element);
+});
+}"]]))
 
 (defn add-base [page {:keys [body] :as all}]
   (assoc all :body (hp/html5 (base {:page page :servlet-context "" :body body}))))
