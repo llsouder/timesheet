@@ -79,6 +79,19 @@
        [:input {:type "hidden", :value (:id charge) :name "id"}]
        [:input {:type "submit", :value "X", :name (str "submit_" (:id charge) )}]]]]))
 
+(defn remap-charges
+  [charges]
+  (reduce #(assoc %1 (:id %2) (:name %2)) {} charges))
+
+(defn get-charge-id
+  [row row-data]
+    ((keyword (str "charge-row" row)) row-data))
+
+(defn get-charge-name
+  [row charges row-data]
+  (let [name-map (remap-charges charges)]
+    (name-map (get-charge-id row row-data))))
+
 (defn charge
   [{:keys [charges name errors]}]
   [:div {:class "row"}
@@ -142,20 +155,21 @@
     [:th {:style "width: 180px;text-align: center;"} "Name"]
     (for [day (dutil/work-week date)]
       [:th {:style "width: 30px; text-align: center;"} (dutil/day-name day) [:br] (f/unparse dutil/MM-dd-formatter day)])
-    [:th {:style "width: 30px;text-align: center;"} "Total"]]])
+    [:th {:style "width: 30px;text-align: center;"} "Total"]
+    [:th]]])
 
 (defn select-option-map
   [row charge row-data]
   (let [charge-key (keyword (str "charge-row" row))]
     (if (= (:id charge) (charge-key row-data))
-        {:value (:id charge) :selected "true"}
-        {:value (:id charge)})))
+      {:value (:id charge) :selected "true"}
+      {:value (:id charge)})))
 
 (defn charge-select
   [row charges row-data]
   [:select
-  (conj {:name (str "charge-row" row) :form "timesheet"}
-        (when (contains? row-data (keyword (str "charge-row" row))) [:disabled "true"]))
+   (conj {:name (str "charge-row" row) :form "timesheet"}
+         (when (contains? row-data (keyword (str "charge-row" row))) [:disabled "true"]))
    ;;blank
    [:option {:value "" }]
    (for [charge charges]
@@ -175,6 +189,7 @@
      [:input {:onblur (str "findTotal('row" row "')"), :type "text", :name cellname, :size "4" :value ((keyword cellname) row-data)}]]))
 
 (defn hours-row
+  "row - number, charges - id and name from DB, row-data - all the data from the form."
   [row charges row-data]
   [:tr
    (str "<!--row" row "-->")
@@ -182,7 +197,13 @@
    (for [col (range 7)]
      (hours-cell row col row-data))
    [:td {:style "width: 30px;text-align: center;"}
-    [:input {:type "text", :id (str "row" row), :size "4"}]" "]
+    [:input {:type "text", :id (str "row" row), :size "4"}]]
+   [:td
+    [:input (conj {:formaction (str "/timesheet_delete?delete-charge-id=" (get-charge-id row row-data)) :type "submit", :value "X", :name "who-cares"}
+                 (when (contains? row-data (keyword (str "charge-row" row)))
+                   [:onclick (str "return confirm('Delete "
+                               (get-charge-name row charges row-data)
+                               " hours?\\n Are you sure?');")]))]]
    (str "<!--end of row" row "-->")])
 
 (defn timesheet

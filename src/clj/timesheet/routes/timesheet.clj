@@ -100,15 +100,12 @@
            ((nth days col) sql-data)]) (range 7)))))
 
 (defn create-hours! [{:keys [data]}]
-  (log/info "***create-hours")
   (doseq [rowdata (make-sql-row-args data)]
     (do
-    (log/info "create hours:" (assoc rowdata :employee_number employee_number))
     (db/insert-hour! (assoc rowdata :employee_number employee_number :end_date (dutil/format-for-sql (:enddate data)))))
     (response/found "/timesheet")))
 
 (defn parse-submitted-data [params]
-  (log/info "*parse-submitted-data")
   (let [results (keep #(validate-data %1 params) charge-keys)]
     {:errors (into {} (map :errors results))
      :data (into {} (map :data results))}))
@@ -129,7 +126,6 @@
     (view/add-base "timesheet" stuff)))
 
 (defn submit-time [{:keys [params]}]
-  (log/info "**submit-time")
   (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))
         datamap (parse-submitted-data params)]
     ;;datamap looks like:
@@ -157,7 +153,16 @@
   (let [date (t/minus (f/parse dutil/MM-dd-yyyy-formatter (:enddate params)) (t/days 7))]
     (timesheet-page-for {:flash (assoc params :date date)})))
 
+(defn delete-time [{:keys [params]}]
+  (let [date (f/parse dutil/MM-dd-yyyy-formatter (:enddate params))]
+    (db/delete-hour! {:employee_number employee_number
+                      :charge_id (:delete-charge-id params)
+                      :end_date (dutil/format-for-sql (:enddate params))})
+        (-> (response/found "/timesheet")
+            (assoc :flash (assoc params :date date )))))
+
 (defroutes timesheet-routes
+  (POST "/timesheet_delete" request (delete-time request))
   (POST "/timesheet_submit" request (submit-time request))
   (POST "/timesheet_next" request (timesheet-page-next request))
   (POST "/timesheet_back" request (timesheet-page-back request))
