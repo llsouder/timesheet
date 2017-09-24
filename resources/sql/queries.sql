@@ -62,10 +62,21 @@ SELECT * FROM hours
 WHERE employee_number = :employee_number AND
 end_date = parsedatetime(:end_date , 'MM-dd-yyyy');
 
--- :name insert-hour! :! :n
--- :doc Insert a single hour record returning affected row count
-insert into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
-values (:employee_number, :charge_id, parsedatetime(:end_date, 'yyyy-MM-dd'), :sun, :mon, :tue, :wed, :thu, :fri, :sat)
+-- :name insert-hours! :! :n
+-- :doc Insert or create a single hours record returning affected row count
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+UPDATE hours
+  SET sun = :sun, mon = :mon, tue = :tue, wed = :wed, thu = :thu, fri = :fri, sat = :sat)
+  WHERE employee_number = :employee_number AND
+  charge_id = :charge_id AND
+  end_date = :end_date;
+IF @@ROWCOUNT = 0
+BEGIN
+  INSERT INTO hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
+    VALUES (:employee_number, :charge_id, parsedatetime(:end_date, 'yyyy-MM-dd'), :sun, :mon, :tue, :wed, :thu, :fri, :sat)
+END
+COMMIT TRANSACTION;
 
 -- :name create-hours! :! :n
 -- :doc Insert multiple hour records with :tuple* parameter type
