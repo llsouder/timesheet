@@ -80,6 +80,7 @@
        [:input {:type "submit", :value "X", :name (str "submit_" (:id charge) )}]]]]))
 
 (defn remap-charges
+  "Remap database charge format from {:id id :name name} to {id name}."
   [charges]
   (reduce #(assoc %1 (:id %2) (:name %2)) {} charges))
 
@@ -229,7 +230,7 @@
     [:div {:class "span12"}
      [:table {:class "timesheet fixed table table-bordered table-striped table-highlight"}
       (add-day-header date)
-      [:form {:method "POST", :id "timesheet", :action "/timesheet_submit"}
+      [:form {:method "POST", :id "timesheet", :action "/timesheet_submit" :onsubmit "return enableCombos()"}
        (anti-forgery-field)
        [:input {:type "text", :style "display:none", :name "enddate", :value enddate}]
        [:tbody {:onload "findAllTotals()"}
@@ -243,14 +244,31 @@
          [:td {:colspan "2"}
           [:input {:type "submit", :class "btn btn-primary", :name "submit", :value "Submit"}]]]]]
       ]]
-    [:script {:type "text/javascript"} "\nfunction findTotal(name){\n  var tot=0;\n  for (i = 0; i < 7; i++) {\n    var arr = document.getElementsByName(name + '-' + i)
-  [0];\n    if(parseInt(arr.value))\n      tot += parseInt(arr.value);\n    document.getElementById(name).value = tot;\n  }\n}
+    [:script {:type "text/javascript"} "
+function findTotal(name){
+  var tot=0;\n  for (i = 0; i < 7; i++) {
+    var arr = document.getElementsByName(name + '-' + i)[0];
+    if(parseInt(arr.value))
+      tot += parseInt(arr.value);
+    document.getElementById(name).value = tot;
+  }
+}
+
 function findAllTotals() {
-var names = ['row0', 'row1', 'row2', 'row3', 'row4', 'row5'];
-names.forEach(function(element){
-findTotal(element);
-});
-}"]]))
+  var names = ['row0', 'row1', 'row2', 'row3', 'row4', 'row5'];
+  names.forEach(function(element){
+    findTotal(element);
+  });
+}
+
+function enableCombos() {
+  var names = ['charge-row0', 'charge-row1', 'charge-row2', 'charge-row3', 'charge-row4', 'charge-row5'];
+  names.forEach(function(name){
+    document.getElementsByName(name)[0].disabled=false;
+  });
+  return true;
+}"]
+    ]))
 
 (defn add-base [page {:keys [body] :as all}]
   (assoc all :body (hp/html5 (base {:page page :servlet-context "" :body body}))))

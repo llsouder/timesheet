@@ -102,7 +102,7 @@
 (defn create-hours! [{:keys [data]}]
   (doseq [rowdata (make-sql-row-args data)]
     (do
-    (db/insert-hour! (assoc rowdata :employee_number employee_number :end_date (dutil/format-for-sql (:enddate data)))))
+    (db/merge-hour! (assoc rowdata :employee_number employee_number :end_date (dutil/format-for-sql (:enddate data)))))
     (response/found "/timesheet")))
 
 (defn parse-submitted-data [params]
