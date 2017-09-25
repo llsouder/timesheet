@@ -67,10 +67,10 @@ end_date = parsedatetime(:end_date , 'MM-dd-yyyy');
 insert into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
 values (:employee_number, :charge_id, parsedatetime(:end_date, 'yyyy-MM-dd'), :sun, :mon, :tue, :wed, :thu, :fri, :sat)
 
--- :name create-hours! :! :n
--- :doc Insert multiple hour records with :tuple* parameter type
-insert into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
-values :tuple*:hours
+-- :name merge-hour! :! :n
+-- :doc Insert a single hour record returning affected row count
+merge into hours (employee_number, charge_id, end_date, sun, mon, tue, wed, thu, fri, sat)
+values (:employee_number, :charge_id, parsedatetime(:end_date, 'yyyy-MM-dd'), :sun, :mon, :tue, :wed, :thu, :fri, :sat)
 
 -- :name update-hour! :! :n
 -- :doc Update an existing hour record
